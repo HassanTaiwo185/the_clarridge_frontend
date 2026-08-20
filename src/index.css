@@ -1,0 +1,117 @@
+:root {
+  --clarridge-navy: #0a1f44;
+  --clarridge-navy-dark: #061530;
+  --clarridge-gold: #c9a44c;
+  --clarridge-gray: #6c757d;
+}
+
+body {
+  background-color: #f4f5f7;
+  color: var(--clarridge-navy);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.btn-navy {
+  background-color: var(--clarridge-navy);
+  border-color: var(--clarridge-navy);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.btn-navy:hover {
+  background-color: var(--clarridge-navy-dark);
+  border-color: var(--clarridge-navy-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 31, 68, 0.25);
+}
+
+.text-navy {
+  color: var(--clarridge-navy);
+}
+
+.form-control:focus {
+  border-color: var(--clarridge-navy);
+  box-shadow: 0 0 0 0.2rem rgba(10, 31, 68, 0.15);
+}
+
+/* ---------- Glassmorphism / admin UI polish ---------- */
+
+.glass-sidebar {
+  background: linear-gradient(180deg, rgba(10, 31, 68, 0.97) 0%, rgba(6, 21, 48, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nav-link-glass {
+  transition: all 0.18s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.nav-link-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff !important;
+  padding-left: 1.1rem !important;
+}
+
+.nav-link-glass.active {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(10, 31, 68, 0.06);
+  transition: all 0.25s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(10, 31, 68, 0.12);
+  border-color: rgba(201, 164, 76, 0.3);
+}
+
+.glass-header {
+  background: linear-gradient(135deg, rgba(10, 31, 68, 0.96) 0%, rgba(6, 21, 48, 0.96) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.table-row-hover tbody tr {
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.table-row-hover tbody tr:hover {
+  background: rgba(10, 31, 68, 0.04);
+}
+
+.status-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-pending {
+  background: rgba(201, 164, 76, 0.15);
+  color: #97742f;
+}
+
+.status-shortlisted {
+  background: rgba(13, 110, 253, 0.12);
+  color: #0d6efd;
+}
+
+.status-approved {
+  background: rgba(25, 135, 84, 0.12);
+  color: #198754;
+}
