@@ -106,29 +106,37 @@ function DashboardOverview() {
             {recentApplications.length === 0 ? (
               <p className="text-muted small mb-0">No applications yet.</p>
             ) : (
-              <table className="table table-sm table-row-hover mb-0">
-                <thead>
-                  <tr className="text-uppercase text-muted small">
-                    <th>Name</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentApplications.map((app) => (
-                    <tr
-                      key={app.id}
-                      onClick={() => navigate(`/admin/applications/${app.id}`)}
-                    >
-                      <td>{app.full_name}</td>
-                      <td>
-                        <span className={`status-pill ${statusPillClass(app.status)}`}>
-                          {app.status}
-                        </span>
-                      </td>
+              <div style={{ overflowX: "auto" }}>
+                <table className="table table-sm table-row-hover mb-0" style={{ minWidth: "500px" }}>
+                  <thead>
+                    <tr className="text-uppercase text-muted small">
+                      <th>Name</th>
+
+                      <th>Applied</th>
+                      <th>Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {recentApplications.map((app) => (
+                      <tr
+                        key={app.id}
+                        onClick={() => navigate("/admin/applications")}
+                      >
+                        <td>{app.full_name}</td>
+                        
+                        <td className="text-muted small">
+                          {new Date(app.date_applied).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <span className={`status-pill ${statusPillClass(app.status)}`}>
+                            {app.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>

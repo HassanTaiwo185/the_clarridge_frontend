@@ -41,11 +41,23 @@ function AdminLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
-      {/* Desktop sidebar — visible lg and up */}
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+      }}
+    >
+      {/* Desktop sidebar */}
       <aside
         className="glass-sidebar d-none d-lg-flex flex-column p-4"
-        style={{ width: "260px", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}
+        style={{
+          width: "260px",
+          flexShrink: 0,
+          height: "100vh",
+          overflowY: "auto",
+        }}
       >
         <div className="d-flex align-items-center gap-2 mb-5 text-white">
           <span style={{ fontSize: "1.25rem" }}>⛪</span>
@@ -54,7 +66,7 @@ function AdminLayout() {
         <SidebarNav />
       </aside>
 
-      {/* Mobile offcanvas sidebar — below lg */}
+      {/* Mobile offcanvas sidebar */}
       <div
         className={`offcanvas offcanvas-start glass-sidebar ${mobileNavOpen ? "show" : ""}`}
         style={{ visibility: mobileNavOpen ? "visible" : "hidden", width: "260px" }}
@@ -76,7 +88,6 @@ function AdminLayout() {
         </div>
       </div>
 
-      {/* Backdrop for mobile nav */}
       {mobileNavOpen && (
         <div
           className="offcanvas-backdrop fade show"
@@ -84,8 +95,20 @@ function AdminLayout() {
         />
       )}
 
-      <main className="flex-grow-1" style={{ backgroundColor: "#f4f5f7", minWidth: 0 }}>
-        <header className="glass-header d-flex justify-content-between align-items-center px-4 py-3 text-white">
+      {/* Main content area */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        <header
+          className="glass-header d-flex justify-content-between align-items-center px-4 py-3 text-white"
+          style={{ flexShrink: 0 }}
+        >
           <div className="d-flex align-items-center gap-3">
             <button
               type="button"
@@ -108,10 +131,17 @@ function AdminLayout() {
           </p>
         </header>
 
-        <div className="p-3 p-lg-4">
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            backgroundColor: "#f4f5f7",
+            padding: "1.5rem",
+          }}
+        >
           <Outlet />
         </div>
-      </main>
+      </div>
     </div>
   );
 }

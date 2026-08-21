@@ -8,6 +8,11 @@ import Dashboard from '../pages/Dashboard';
 import AdminRoute from './AdminRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import DashboardOverview from '../pages/admin/DashboardOverview';
+import ProgrammesManage from '../pages/admin/ProgrammesManage';
+import ApplicationsManage from '../pages/admin/ApplicationsManage';
+import CollegiumManage from '../pages/admin/CollegiumManage';
+import TestimonialsManage from '../pages/admin/TestimonialsManage';
+import ArticlesManage from '../pages/admin/ArticlesManage';
 
 export default function AppRoutes() {
   return (
@@ -28,6 +33,11 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<DashboardOverview />} />
+        <Route path="programmes" element={<ProgrammesManage />} />
+        <Route path="applications" element={<ApplicationsManage />} />
+        <Route path="collegium" element={<CollegiumManage />} />
+        <Route path="testimonials" element={<TestimonialsManage />} />
+        <Route path="articles" element={<ArticlesManage />} />
       </Route>
     </Routes>
   );
