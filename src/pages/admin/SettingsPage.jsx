@@ -201,6 +201,7 @@ function SettingsPage() {
           {profile.first_name} {profile.last_name}
         </div>
         <div className="small text-muted">{profile.email}</div>
+        {profile.office && <div className="small text-muted">{profile.office}</div>}
       </div>
 
       {!editMode ? (
@@ -214,13 +215,13 @@ function SettingsPage() {
             <div>{profile.date_of_birth}</div>
           </div>
           {profile.office && (
-            <div className="py-2 border-bottom">
+            <div style={rowStyle}>
               <div className="text-muted" style={{ fontSize: "0.75rem" }}>Office</div>
               <div>{profile.office}</div>
             </div>
           )}
           {profile.bio && (
-            <div className="py-2 border-bottom">
+            <div style={rowStyle}>
               <div className="text-muted" style={{ fontSize: "0.75rem" }}>Bio</div>
               <div>{profile.bio}</div>
             </div>
@@ -293,7 +294,7 @@ function SettingsPage() {
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="small text-muted d-block mb-1">Date of Birth</label>
             <input
               type="date"
@@ -304,9 +305,10 @@ function SettingsPage() {
               required
             />
           </div>
-
-          <div className="mb-2">
-            <label className="small text-muted d-block mb-1">Office</label>
+          <div className="mb-3">
+            <label className="small text-muted d-block mb-1">
+              Office <span className="text-muted">(optional)</span>
+            </label>
             <input
               type="text"
               className="form-control form-control-sm"
@@ -317,7 +319,9 @@ function SettingsPage() {
             />
           </div>
           <div className="mb-4">
-            <label className="small text-muted d-block mb-1">Bio</label>
+            <label className="small text-muted d-block mb-1">
+              Bio <span className="text-muted">(optional)</span>
+            </label>
             <textarea
               className="form-control form-control-sm"
               rows={3}
@@ -361,7 +365,7 @@ function SettingsPage() {
       {showPasswordModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "rgba(6, 21, 48, 0.5)", zIndex: 1060 }}
+          style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1060 }}
           onClick={closePasswordModal}
         >
           <div

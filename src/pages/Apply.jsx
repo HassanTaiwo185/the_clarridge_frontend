@@ -16,13 +16,26 @@ function Apply() {
     email: "",
     phone_number: "",
     date_of_birth: "",
+    university: "",
+    level: "",
+    course_of_study: "",
+    statement_of_purpose: "",
   });
   const [passportPhoto, setPassportPhoto] = useState(null);
   const [cvTranscript, setCvTranscript] = useState(null);
 
   const validateStep = () => {
     if (currentStep === 0) {
-      if (!form.full_name.trim() || !form.email.trim() || !form.phone_number.trim() || !form.date_of_birth) {
+      if (
+        !form.full_name.trim() ||
+        !form.email.trim() ||
+        !form.phone_number.trim() ||
+        !form.date_of_birth ||
+        !form.university.trim() ||
+        !form.level.trim() ||
+        !form.course_of_study.trim() ||
+        !form.statement_of_purpose.trim()
+      ) {
         setError("Please fill in all personal information fields.");
         return false;
       }
@@ -56,6 +69,10 @@ function Apply() {
       data.append("email", form.email);
       data.append("phone_number", form.phone_number);
       data.append("date_of_birth", form.date_of_birth);
+      data.append("university", form.university);
+      data.append("level", form.level);
+      data.append("course_of_study", form.course_of_study);
+      data.append("statement_of_purpose", form.statement_of_purpose);
       data.append("passport_photo", passportPhoto);
       data.append("cv_transcript", cvTranscript);
 
@@ -144,7 +161,7 @@ function Apply() {
                 />
               </div>
             </div>
-            <div className="row g-3">
+            <div className="row g-3 mb-3">
               <div className="col-md-6">
                 <label className="fw-semibold small mb-1 d-block">Phone Number</label>
                 <input
@@ -164,6 +181,48 @@ function Apply() {
                   onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
                 />
               </div>
+            </div>
+            <div className="row g-3 mb-3">
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">University</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter your university"
+                  value={form.university}
+                  onChange={(e) => setForm({ ...form, university: e.target.value })}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">Level</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. 300 Level"
+                  value={form.level}
+                  onChange={(e) => setForm({ ...form, level: e.target.value })}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">Course of Study</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. Law"
+                  value={form.course_of_study}
+                  onChange={(e) => setForm({ ...form, course_of_study: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className="fw-semibold small mb-1 d-block">Statement of Purpose</label>
+              <textarea
+                className="form-control"
+                rows={5}
+                placeholder="Tell us why you're applying and what you hope to gain..."
+                value={form.statement_of_purpose}
+                onChange={(e) => setForm({ ...form, statement_of_purpose: e.target.value })}
+              />
             </div>
           </div>
         )}
@@ -224,6 +283,14 @@ function Apply() {
               <dd>{form.phone_number}</dd>
               <dt className="text-muted">Date of Birth</dt>
               <dd>{form.date_of_birth}</dd>
+              <dt className="text-muted">University</dt>
+              <dd>{form.university}</dd>
+              <dt className="text-muted">Level</dt>
+              <dd>{form.level}</dd>
+              <dt className="text-muted">Course of Study</dt>
+              <dd>{form.course_of_study}</dd>
+              <dt className="text-muted">Statement of Purpose</dt>
+              <dd style={{ whiteSpace: "pre-wrap" }}>{form.statement_of_purpose}</dd>
               <dt className="text-muted">Passport Photo</dt>
               <dd>{passportPhoto?.name}</dd>
               <dt className="text-muted">CV / Transcript</dt>

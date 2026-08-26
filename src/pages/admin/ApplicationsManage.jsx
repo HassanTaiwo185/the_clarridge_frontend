@@ -218,6 +218,18 @@ function ApplicationsManage() {
               <dt className="text-muted">Date of Birth</dt>
               <dd>{selectedApp.date_of_birth}</dd>
 
+              <dt className="text-muted">University</dt>
+              <dd>{selectedApp.university || "—"}</dd>
+
+              <dt className="text-muted">Level</dt>
+              <dd>{selectedApp.level || "—"}</dd>
+
+              <dt className="text-muted">Course of Study</dt>
+              <dd>{selectedApp.course_of_study || "—"}</dd>
+
+              <dt className="text-muted">Statement of Purpose</dt>
+              <dd style={{ whiteSpace: "pre-wrap" }}>{selectedApp.statement_of_purpose || "—"}</dd>
+
               <dt className="text-muted">Date Applied</dt>
               <dd>{new Date(selectedApp.date_applied).toLocaleString()}</dd>
 

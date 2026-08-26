@@ -28,6 +28,8 @@ import ArticleDetail from '../pages/ArticleDetail';
 import Calendar from '../pages/Calendar';
 import Donate from '../pages/Donate';
 import NotFound from '../pages/NotFound';
+import TeamManage from '../pages/admin/TeamManage';
+import ImpactManage from '../pages/admin/ImpactManage';
 
 
 
@@ -75,6 +77,8 @@ export default function AppRoutes() {
         <Route path="opportunities" element={<OpportunitiesManage />} />
         <Route path="calendar" element={<CalendarManage />} />
         <Route path="observatory" element={<ObservatoryManage />} />
+        <Route path="team" element={<TeamManage />} />
+<Route path="impact" element={<ImpactManage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

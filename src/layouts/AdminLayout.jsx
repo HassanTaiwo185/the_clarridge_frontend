@@ -12,6 +12,8 @@ const navItems = [
   { label: "Testimonials", path: "/admin/testimonials" },
   { label: "Users", path: "/admin/users", superuserOnly: true },
     { label: "Observatory", path: "/admin/observatory" },
+    { label: "Team Members", path: "/admin/team" },
+{ label: "Impact", path: "/admin/impact" },
   { label: "Calendar", path: "/admin/calendar" },
   { label: "Settings", path: "/admin/settings" },
 
