@@ -27,6 +27,7 @@ import Articles from '../pages/Articles';
 import ArticleDetail from '../pages/ArticleDetail';
 import Calendar from '../pages/Calendar';
 import Donate from '../pages/Donate';
+import NotFound from '../pages/NotFound';
 
 
 
@@ -75,6 +76,8 @@ export default function AppRoutes() {
         <Route path="calendar" element={<CalendarManage />} />
         <Route path="observatory" element={<ObservatoryManage />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

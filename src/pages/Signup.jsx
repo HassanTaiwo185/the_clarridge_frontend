@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useForm from "../hooks/useForm";
 import validateSignup from "../hooks/useSignupValidation";
@@ -7,61 +7,74 @@ import { registerUser } from "../api/auth";
 function Signup() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [slowStart, setSlowStart] = useState(false);
   const [serverError, setServerError] = useState("");
+  const slowTimerRef = useRef(null);
 
-  const { values, errors, touched, handleChange, handleBlur, validateAll, setErrors } =
+  const { values, errors, touched, handleChange, handleBlur, validateAll } =
     useForm(
       {
         first_name: "",
         last_name: "",
         email: "",
-        password: "",
-        confirm_password: "",
         phone_number: "",
         date_of_birth: "",
+        password: "",
+        confirm_password: "",
       },
       validateSignup
     );
+
+  useEffect(() => {
+    return () => {
+      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
 
-    if (submitting) return; // hard guard against double-submission
+    if (submitting) return;
 
     if (!validateAll()) return;
 
     document.activeElement?.blur();
 
     setSubmitting(true);
+    setSlowStart(false);
+    slowTimerRef.current = setTimeout(() => setSlowStart(true), 3000);
+
     try {
       await registerUser(values);
       navigate(`/verify-email?email=${encodeURIComponent(values.email)}`);
     } catch (err) {
       if (err.response?.data) {
-        const backendErrors = {};
-        Object.entries(err.response.data).forEach(([field, messages]) => {
-          backendErrors[field] = Array.isArray(messages) ? messages[0] : messages;
-        });
-        setErrors((prev) => ({ ...prev, ...backendErrors }));
-
-        if (!Object.keys(backendErrors).some((f) => f in values)) {
-          setServerError("Something went wrong. Please try again.");
-        }
+        const backendData = err.response.data;
+        const firstError = Object.values(backendData)[0];
+        setServerError(Array.isArray(firstError) ? firstError[0] : String(firstError));
       } else {
         setServerError("Unable to reach the server. Please check your connection.");
       }
     } finally {
+      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
       setSubmitting(false);
+      setSlowStart(false);
     }
   };
 
+  const buttonLabel = submitting
+    ? slowStart
+      ? "Waking up our servers, almost there..."
+      : "Creating account..."
+    : "Sign Up";
+
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-white py-5 px-3">
-      <div className="w-100" style={{ maxWidth: "400px" }}>
+      <div className="w-100" style={{ maxWidth: "450px" }}>
         <div className="text-center mb-4">
-          <h2 className="text-navy fw-bold">The Clarridge</h2>
-          <p className="text-muted">Create your account</p>
+          <h2 className="text-navy fw-bold">Create your account</h2>
+          <p className="text-muted">Join The Clarridge community</p>
         </div>
 
         {serverError && (
@@ -69,40 +82,45 @@ function Signup() {
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              name="first_name"
-              id="first_name"
-              className={`form-control ${touched.first_name && errors.first_name ? "is-invalid" : ""}`}
-              placeholder="First Name"
-              value={values.first_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              disabled={submitting}
-            />
-            <label htmlFor="first_name">First Name</label>
-            {touched.first_name && errors.first_name && (
-              <div className="invalid-feedback">{errors.first_name}</div>
-            )}
-          </div>
-
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              name="last_name"
-              id="last_name"
-              className={`form-control ${touched.last_name && errors.last_name ? "is-invalid" : ""}`}
-              placeholder="Last Name"
-              value={values.last_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              disabled={submitting}
-            />
-            <label htmlFor="last_name">Last Name</label>
-            {touched.last_name && errors.last_name && (
-              <div className="invalid-feedback">{errors.last_name}</div>
-            )}
+          <div className="row g-2 mb-3">
+            <div className="col-md-6">
+              <div className="form-floating">
+                <input
+                  type="text"
+                  name="first_name"
+                  id="first_name"
+                  className={`form-control ${touched.first_name && errors.first_name ? "is-invalid" : ""}`}
+                  placeholder="First Name"
+                  value={values.first_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  disabled={submitting}
+                />
+                <label htmlFor="first_name">First Name</label>
+                {touched.first_name && errors.first_name && (
+                  <div className="invalid-feedback">{errors.first_name}</div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="form-floating">
+                <input
+                  type="text"
+                  name="last_name"
+                  id="last_name"
+                  className={`form-control ${touched.last_name && errors.last_name ? "is-invalid" : ""}`}
+                  placeholder="Last Name"
+                  value={values.last_name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  disabled={submitting}
+                />
+                <label htmlFor="last_name">Last Name</label>
+                {touched.last_name && errors.last_name && (
+                  <div className="invalid-feedback">{errors.last_name}</div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="form-floating mb-3">
@@ -196,10 +214,9 @@ function Signup() {
           </div>
 
           <button type="submit" className="btn btn-navy w-100 py-2" disabled={submitting}>
-            {submitting ? "Creating account..." : "Sign Up"}
+            {buttonLabel}
           </button>
         </form>
-
 
         <p className="text-center text-muted mt-4 small">
           Already have an account?{" "}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useForm from "../hooks/useForm";
 import validateLogin from "../hooks/useLoginValidation";
@@ -9,11 +9,19 @@ import { parseJwt } from "../utils/jwt";
 function Login() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [slowStart, setSlowStart] = useState(false);
   const [serverError, setServerError] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
+  const slowTimerRef = useRef(null);
 
   const { values, errors, touched, handleChange, handleBlur, validateAll } =
     useForm({ email: "", password: "" }, validateLogin);
+
+  useEffect(() => {
+    return () => {
+      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +34,9 @@ function Login() {
     document.activeElement?.blur();
 
     setSubmitting(true);
+    setSlowStart(false);
+    slowTimerRef.current = setTimeout(() => setSlowStart(true), 3000);
+
     try {
       const response = await loginUser({
         username: values.email,
@@ -53,9 +64,17 @@ function Login() {
         setServerError("Unable to reach the server. Please check your connection.");
       }
     } finally {
+      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
       setSubmitting(false);
+      setSlowStart(false);
     }
   };
+
+  const buttonLabel = submitting
+    ? slowStart
+      ? "Waking up our servers, almost there..."
+      : "Logging in..."
+    : "Log In";
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-white py-5 px-3">
@@ -130,7 +149,7 @@ function Login() {
           </div>
 
           <button type="submit" className="btn btn-navy w-100 py-2" disabled={submitting}>
-            {submitting ? "Logging in..." : "Log In"}
+            {buttonLabel}
           </button>
         </form>
 

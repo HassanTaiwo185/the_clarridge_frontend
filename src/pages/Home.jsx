@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicNavbar from "../components/PublicNavbar";
+import ColdStartLoader from "../components/ColdStartLoader";
 import { getPublicProgrammes } from "../api/public";
 import { submitTestimonial } from "../api/testimonialsPublic";
 import api from "../api/axios";
@@ -317,7 +318,7 @@ function Home() {
           </div>
 
           {loadingProgrammes ? (
-            <p className="text-muted">Loading programmes...</p>
+            <ColdStartLoader />
           ) : programmesError ? (
             <div className="alert alert-danger">{programmesError}</div>
           ) : filteredProgrammes.length === 0 ? (
@@ -421,7 +422,7 @@ function Home() {
           </div>
 
           {loadingObservatory ? (
-            <p className="text-muted">Loading...</p>
+            <ColdStartLoader />
           ) : (
             <>
               {observatoryTab === "featured" && featuredPost && (
@@ -443,7 +444,7 @@ function Home() {
                         className="bg-light d-flex align-items-center justify-content-center text-muted"
                         style={{ width: "100%", height: "320px", borderRadius: "6px", fontSize: "3rem" }}
                       >
-                        No image
+                        🖼️
                       </div>
                     )}
                   </div>
@@ -483,7 +484,7 @@ function Home() {
                             className="bg-light d-flex align-items-center justify-content-center text-muted mb-3"
                             style={{ width: "100%", height: "180px", borderRadius: "6px", fontSize: "2rem" }}
                           >
-                            No Image
+                            🖼️
                           </div>
                         )}
                         <div className="small fw-semibold mb-1" style={{ color: "var(--clarridge-gold)" }}>
@@ -517,7 +518,7 @@ function Home() {
           </h2>
 
           {loadingTeamMembers ? (
-            <p className="text-muted">Loading...</p>
+            <ColdStartLoader />
           ) : teamMembers.length === 0 ? (
             <p className="text-muted">No team members to show yet.</p>
           ) : (
@@ -628,7 +629,7 @@ function Home() {
           </p>
 
           {loadingMembers ? (
-            <p className="text-muted">Loading...</p>
+            <ColdStartLoader />
           ) : allMembers.length === 0 ? (
             <p className="text-muted">No members to show yet.</p>
           ) : (
@@ -697,7 +698,7 @@ function Home() {
           </h2>
 
           {loadingTestimonials ? (
-            <p className="text-muted">Loading...</p>
+            <ColdStartLoader />
           ) : testimonials.length === 0 ? (
             <p className="text-muted">No testimonials yet.</p>
           ) : (
