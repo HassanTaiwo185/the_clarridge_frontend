@@ -5,7 +5,7 @@ function ApplyConfirmation() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const referenceNumber = location.state?.referenceNumber;
+  const referenceNumber = String(Math.floor(100000 + Math.random() * 900000));
 
   return (
     <div>
@@ -37,7 +37,7 @@ function ApplyConfirmation() {
             <ul className="small text-muted mb-0 ps-3">
               <li>Your application will be reviewed by our team.</li>
               <li>Shortlisted candidates will be contacted via email.</li>
-              <li>Add hello@theclarridge.org to your contacts.</li>
+              <li>Add theclarridge@gmail.com to your contacts.</li>
             </ul>
           </div>
         )}
