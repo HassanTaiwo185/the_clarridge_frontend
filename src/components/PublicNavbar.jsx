@@ -37,11 +37,6 @@ function PublicNavbar() {
     }
   };
 
-  const isActive = (link) => {
-    if (link.type === "page") return location.pathname === link.path;
-    return false; // scroll-based sections don't get a static active state without scroll-spy logic
-  };
-
   return (
     <>
       <nav className="bg-white border-bottom sticky-top">
@@ -63,11 +58,8 @@ function PublicNavbar() {
               <button
                 key={link.label}
                 type="button"
-                className="btn btn-link text-decoration-none p-0 fw-semibold"
-                style={{
-                  fontSize: "0.95rem",
-                  color: isActive(link) ? "var(--clarridge-navy)" : "#495057",
-                }}
+                className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
+                style={{ fontSize: "0.95rem" }}
                 onClick={() => handleNavClick(link)}
               >
                 {link.label}
@@ -76,10 +68,18 @@ function PublicNavbar() {
           </div>
 
           <div className="d-none d-lg-flex align-items-center gap-2">
-            <button type="button" className="btn btn-outline-secondary btn-sm px-3" onClick={() => navigate("/apply")}>
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-sm px-3"
+              onClick={() => navigate("/apply")}
+            >
               Apply
             </button>
-            <button type="button" className="btn btn-navy btn-sm px-3" onClick={() => navigate("/donate")}>
+            <button
+              type="button"
+              className="btn btn-navy btn-sm px-3"
+              onClick={() => navigate("/donate")}
+            >
               Donate
             </button>
           </div>
@@ -102,12 +102,23 @@ function PublicNavbar() {
         >
           <div
             className="position-absolute top-0 end-0 p-4"
-            style={{ backgroundColor: "var(--clarridge-navy)", width: "85%", maxWidth: "340px", height: "100vh", overflowY: "auto" }}
+            style={{
+              backgroundColor: "var(--clarridge-navy)",
+              width: "85%",
+              maxWidth: "340px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="d-flex justify-content-end mb-4">
-              <button type="button" className="btn-close btn-close-white" onClick={() => setMobileOpen(false)} />
+              <button
+                type="button"
+                className="btn-close btn-close-white"
+                onClick={() => setMobileOpen(false)}
+              />
             </div>
+
             <div className="d-flex flex-column">
               {NAV_LINKS.map((link) => (
                 <button
@@ -121,10 +132,22 @@ function PublicNavbar() {
                 </button>
               ))}
             </div>
+
             <button
               type="button"
               className="btn w-100 mt-4 py-2 fw-bold"
               style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
+              onClick={() => {
+                setMobileOpen(false);
+                navigate("/donate");
+              }}
+            >
+              Donate
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-light w-100 mt-2 py-2 fw-bold"
               onClick={() => {
                 setMobileOpen(false);
                 navigate("/apply");
