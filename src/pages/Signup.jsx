@@ -95,6 +95,7 @@ function Signup() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   disabled={submitting}
+                  autoComplete="given-name"
                 />
                 <label htmlFor="first_name">First Name</label>
                 {touched.first_name && errors.first_name && (
@@ -114,6 +115,7 @@ function Signup() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   disabled={submitting}
+                  autoComplete="family-name"
                 />
                 <label htmlFor="last_name">Last Name</label>
                 {touched.last_name && errors.last_name && (
@@ -134,6 +136,7 @@ function Signup() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="email"
             />
             <label htmlFor="email">Email Address</label>
             {touched.email && errors.email && (
@@ -152,6 +155,7 @@ function Signup() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="tel"
             />
             <label htmlFor="phone_number">Phone Number</label>
             {touched.phone_number && errors.phone_number && (
@@ -170,6 +174,7 @@ function Signup() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="bday"
             />
             <label htmlFor="date_of_birth">Date of Birth</label>
             {touched.date_of_birth && errors.date_of_birth && (
@@ -188,6 +193,7 @@ function Signup() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="new-password"
             />
             <label htmlFor="password">Password</label>
             {touched.password && errors.password && (
@@ -206,6 +212,7 @@ function Signup() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="new-password"
             />
             <label htmlFor="confirm_password">Confirm Password</label>
             {touched.confirm_password && errors.confirm_password && (

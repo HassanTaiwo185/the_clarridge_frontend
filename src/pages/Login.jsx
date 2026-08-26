@@ -100,6 +100,7 @@ function Login() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="email"
             />
             <label htmlFor="email">Email Address</label>
             {touched.email && errors.email && (
@@ -118,6 +119,7 @@ function Login() {
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={submitting}
+              autoComplete="current-password"
             />
             <label htmlFor="password">Password</label>
             {touched.password && errors.password && (
