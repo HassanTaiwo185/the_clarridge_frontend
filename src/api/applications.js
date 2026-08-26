@@ -9,3 +9,8 @@ export const updateApplication = (id, formData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 export const deleteApplication = (id) => api.delete(`/applications/${id}/`);
+
+export const submitApplication = (formData) =>
+  api.post("/applications/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });

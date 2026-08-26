@@ -64,34 +64,31 @@ function DashboardOverview() {
       <h3 className="text-navy fw-bold mb-4">Overview</h3>
 
       <div className="row g-3 mb-4">
-        <div className="col-6 col-lg-3">
+        <div className="col-12 col-md-4">
           <StatCard
             label="Total Applications"
             value={stats.totalApplications}
             to="/admin/applications"
           />
         </div>
-        <div className="col-6 col-lg-3">
+        <div className="col-12 col-md-4">
           <StatCard
             label="Open Programmes"
             value={stats.openProgrammes}
             to="/admin/programmes"
           />
         </div>
-        <div className="col-6 col-lg-3">
+        <div className="col-12 col-md-4">
           <StatCard
             label="Published Articles"
             value={stats.publishedArticles}
             to="/admin/articles"
           />
         </div>
-        <div className="col-6 col-lg-3">
-          <StatCard label="Donations (This Month)" value="Coming soon" />
-        </div>
       </div>
 
       <div className="row g-3">
-        <div className="col-12 col-lg-6">
+        <div className="col-12">
           <div className="glass-card p-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h6 className="fw-bold mb-0">Recent Applications</h6>
@@ -107,23 +104,18 @@ function DashboardOverview() {
               <p className="text-muted small mb-0">No applications yet.</p>
             ) : (
               <div style={{ overflowX: "auto" }}>
-                <table className="table table-sm table-row-hover mb-0" style={{ minWidth: "500px" }}>
+                <table className="table table-sm table-row-hover mb-0">
                   <thead>
                     <tr className="text-uppercase text-muted small">
                       <th>Name</th>
-
                       <th>Applied</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {recentApplications.map((app) => (
-                      <tr
-                        key={app.id}
-                        onClick={() => navigate("/admin/applications")}
-                      >
+                      <tr key={app.id} onClick={() => navigate("/admin/applications")}>
                         <td>{app.full_name}</td>
-                        
                         <td className="text-muted small">
                           {new Date(app.date_applied).toLocaleDateString()}
                         </td>
@@ -138,13 +130,6 @@ function DashboardOverview() {
                 </table>
               </div>
             )}
-          </div>
-        </div>
-
-        <div className="col-12 col-lg-6">
-          <div className="glass-card p-4">
-            <h6 className="fw-bold mb-3">Recent Donors</h6>
-            <p className="text-muted small mb-0">Donations module coming soon.</p>
           </div>
         </div>
       </div>

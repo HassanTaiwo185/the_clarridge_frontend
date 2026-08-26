@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { isCurrentUserSuperuser } from "../utils/jwt";
 
 const navItems = [
   { label: "Dashboard", path: "/admin" },
@@ -9,15 +10,21 @@ const navItems = [
   { label: "Articles", path: "/admin/articles" },
   { label: "Collegium", path: "/admin/collegium" },
   { label: "Testimonials", path: "/admin/testimonials" },
-  { label: "Donations", path: "/admin/donations" },
-  { label: "Users", path: "/admin/users" },
+  { label: "Users", path: "/admin/users", superuserOnly: true },
+    { label: "Observatory", path: "/admin/observatory" },
+  { label: "Calendar", path: "/admin/calendar" },
   { label: "Settings", path: "/admin/settings" },
+
+  
 ];
 
 function SidebarNav({ onLinkClick }) {
+  const isSuperuser = isCurrentUserSuperuser();
+  const visibleNavItems = navItems.filter((item) => !item.superuserOnly || isSuperuser);
+
   return (
     <nav className="d-flex flex-column gap-1">
-      {navItems.map((item) => (
+      {visibleNavItems.map((item) => (
         <NavLink
           key={item.path}
           to={item.path}
@@ -41,23 +48,10 @@ function AdminLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        width: "100vw",
-        overflow: "hidden",
-      }}
-    >
-      {/* Desktop sidebar */}
+    <div style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden" }}>
       <aside
         className="glass-sidebar d-none d-lg-flex flex-column p-4"
-        style={{
-          width: "260px",
-          flexShrink: 0,
-          height: "100vh",
-          overflowY: "auto",
-        }}
+        style={{ width: "260px", flexShrink: 0, height: "100vh", overflowY: "auto" }}
       >
         <div className="d-flex align-items-center gap-2 mb-5 text-white">
           <span style={{ fontSize: "1.25rem" }}>⛪</span>
@@ -66,7 +60,6 @@ function AdminLayout() {
         <SidebarNav />
       </aside>
 
-      {/* Mobile offcanvas sidebar */}
       <div
         className={`offcanvas offcanvas-start glass-sidebar ${mobileNavOpen ? "show" : ""}`}
         style={{ visibility: mobileNavOpen ? "visible" : "hidden", width: "260px" }}
@@ -95,20 +88,8 @@ function AdminLayout() {
         />
       )}
 
-      {/* Main content area */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <header
-          className="glass-header d-flex justify-content-between align-items-center px-4 py-3 text-white"
-          style={{ flexShrink: 0 }}
-        >
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
+        <header className="glass-header d-flex justify-content-between align-items-center px-4 py-3 text-white" style={{ flexShrink: 0 }}>
           <div className="d-flex align-items-center gap-3">
             <button
               type="button"
@@ -125,20 +106,10 @@ function AdminLayout() {
               <h5 className="mb-0 fw-normal">Admin — Dashboard Overview</h5>
             </div>
           </div>
-          <p className="mb-0 small text-end d-none d-md-block" style={{ opacity: 0.8, maxWidth: "320px" }}>
-            Operator-facing home: applications, donations, and content all
-            summarized in one view.
-          </p>
+
         </header>
 
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            backgroundColor: "#f4f5f7",
-            padding: "1.5rem",
-          }}
-        >
+        <div style={{ flex: 1, overflowY: "auto", backgroundColor: "#f4f5f7", padding: "1.5rem" }}>
           <Outlet />
         </div>
       </div>
