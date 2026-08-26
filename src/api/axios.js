@@ -7,11 +7,21 @@ const api = axios.create({
   baseURL: apiUrl,
 });
 
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const now = Date.now() / 1000;
+    return payload.exp < now;
+  } catch {
+    return true;
+  }
+}
+
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN) || sessionStorage.getItem(ACCESS_TOKEN);
-    if (token) {
+    if (token && !isTokenExpired(token)) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -34,7 +44,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem(REFRESH_TOKEN) || sessionStorage.getItem(REFRESH_TOKEN);
 
-      if (refreshToken) {
+      if (refreshToken && !isTokenExpired(refreshToken)) {
         try {
           // Send refresh token request
           const res = await axios.post(
@@ -57,8 +67,11 @@ api.interceptors.response.use(
         } catch (refreshError) {
           localStorage.clear();
           sessionStorage.clear();
-          window.location.href = "/";
         }
+      } else {
+        // Refresh token missing or also expired — clear stale session silently
+        localStorage.clear();
+        sessionStorage.clear();
       }
     }
 

@@ -12,15 +12,20 @@ function ArticlesManage() {
   const isSuperuser = isCurrentUserSuperuser();
 
   const [editingSlug, setEditingSlug] = useState(null);
-  const [form, setForm] = useState({ title: "", author_name: "", summary: "", date_written: "" });
+  const [form, setForm] = useState({
+    title: "",
+    author_name: "",
+    institution: "",
+    page_count: "",
+    summary: "",
+    date_written: "",
+  });
   const [pdfFile, setPdfFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
   const [confirmSave, setConfirmSave] = useState(false);
   const [confirmDeleteSlug, setConfirmDeleteSlug] = useState(null);
-
-  const [searchTerm, setSearchTerm] = useState("");
 
   const loadArticles = async () => {
     setLoading(true);
@@ -41,7 +46,14 @@ function ArticlesManage() {
   const canManage = (article) => article.uploaded_by === currentUserId || isSuperuser;
 
   const resetForm = () => {
-    setForm({ title: "", author_name: "", summary: "", date_written: "" });
+    setForm({
+      title: "",
+      author_name: "",
+      institution: "",
+      page_count: "",
+      summary: "",
+      date_written: "",
+    });
     setPdfFile(null);
     setFormError("");
   };
@@ -55,6 +67,8 @@ function ArticlesManage() {
     setForm({
       title: article.title,
       author_name: article.author_name,
+      institution: article.institution || "",
+      page_count: article.page_count || "",
       summary: article.summary,
       date_written: article.date_written,
     });
@@ -100,6 +114,8 @@ function ArticlesManage() {
       const data = new FormData();
       data.append("title", form.title);
       data.append("author_name", form.author_name);
+      data.append("institution", form.institution);
+      data.append("page_count", form.page_count);
       data.append("summary", form.summary);
       data.append("date_written", form.date_written);
       if (pdfFile) data.append("pdf_file", pdfFile);
@@ -135,27 +151,6 @@ function ArticlesManage() {
     }
   };
 
-  const handleViewPdf = (url) => {
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
-  const handleDownloadPdf = (url, title) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = title || "article.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-
-  const filteredArticles = articles.filter((a) => {
-  const term = searchTerm.toLowerCase();
-  const authorMatch = a.author_name?.toLowerCase().includes(term);
-  const uploaderMatch = a.uploaded_by_username?.toLowerCase().includes(term);
-  return authorMatch || uploaderMatch;
-});
-
   return (
     <div>
       <div className="text-uppercase text-muted small mb-1">Content</div>
@@ -168,21 +163,11 @@ function ArticlesManage() {
         )}
       </div>
 
-{!loading && (
-  <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-    <p className="text-muted mb-0">
-      {articles.length} article{articles.length !== 1 ? "s" : ""}
-    </p>
-    <input
-      type="text"
-      className="form-control form-control-sm"
-      style={{ width: "260px" }}
-      placeholder="Search by author or uploader..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  </div>
-)}
+      {!loading && (
+        <p className="text-muted mb-4">
+          {articles.length} article{articles.length !== 1 ? "s" : ""}
+        </p>
+      )}
 
       {error && <div className="alert alert-danger">{error}</div>}
 
@@ -210,8 +195,38 @@ function ArticlesManage() {
               <input
                 type="text"
                 className="form-control"
+                placeholder="Actual writer of the article"
                 value={form.author_name}
                 onChange={(e) => setForm({ ...form, author_name: e.target.value })}
+                disabled={saving}
+              />
+            </div>
+          </div>
+
+          <div className="row g-3 mb-3">
+            <div className="col-md-6">
+              <label className="fw-semibold text-navy mb-2 d-block">
+                Institution <span className="text-muted fw-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g. Elizade University Faculty of Law"
+                value={form.institution}
+                onChange={(e) => setForm({ ...form, institution: e.target.value })}
+                disabled={saving}
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="fw-semibold text-navy mb-2 d-block">
+                Page Count <span className="text-muted fw-normal">(optional)</span>
+              </label>
+              <input
+                type="number"
+                min="1"
+                className="form-control"
+                value={form.page_count}
+                onChange={(e) => setForm({ ...form, page_count: e.target.value })}
                 disabled={saving}
               />
             </div>
@@ -221,7 +236,7 @@ function ArticlesManage() {
             <label className="fw-semibold text-navy mb-2 d-block">Summary</label>
             <textarea
               className="form-control"
-              rows={3}
+              rows={2}
               value={form.summary}
               onChange={(e) => setForm({ ...form, summary: e.target.value })}
               disabled={saving}
@@ -240,7 +255,11 @@ function ArticlesManage() {
               />
             </div>
             <div className="col-md-6">
-              <label className="fw-semibold text-navy mb-2 d-block">PDF File</label>
+              <label className="fw-semibold text-navy mb-2 d-block">
+                PDF File {editingSlug !== "new" && (
+                  <span className="text-muted fw-normal">(leave blank to keep current)</span>
+                )}
+              </label>
               <input
                 type="file"
                 accept="application/pdf"
@@ -264,37 +283,57 @@ function ArticlesManage() {
 
       {loading ? (
         <p className="text-muted">Loading articles...</p>
-      ): filteredArticles.length === 0 ? (
-  <div className="glass-card bg-white p-4 text-center text-muted">
-    {articles.length === 0 ? "No articles yet." : "No articles match this search."}
-  </div>
-) : (
+      ) : articles.length === 0 ? (
+        <div className="glass-card bg-white p-4 text-center text-muted">
+          No articles yet. Click "+ Upload New Article" to add one.
+        </div>
+      ) : (
         <div className="row g-3">
-          {filteredArticles.map((a) => (
+          {articles.map((a) => (
             <div className="col-12 col-md-6 col-lg-4" key={a.id}>
               <div className="glass-card bg-white p-4 h-100 d-flex flex-column">
                 <h6 className="fw-bold text-navy mb-2">{a.title}</h6>
+
                 <div className="small text-muted mb-2">
                   <div>By {a.author_name}</div>
+                  {a.institution && <div>{a.institution}</div>}
                   <div>Uploaded by {a.uploaded_by_username || "—"}</div>
                 </div>
+
                 <p className="small text-muted flex-grow-1" style={{ whiteSpace: "pre-wrap" }}>
                   {a.summary}
                 </p>
+
                 <div className="small text-muted mb-3">
+                  {a.page_count && <div>{a.page_count} Pages</div>}
                   <div>Written: {a.date_written}</div>
                   <div>Posted: {new Date(a.date_posted).toLocaleDateString()}</div>
                 </div>
+
                 <div className="d-flex flex-wrap gap-2">
                   <button
                     type="button"
                     className="btn btn-sm btn-navy flex-grow-1"
-                    onClick={() => handleViewPdf(a.pdf_file)}
+                    onClick={() => window.open(a.pdf_file, "_blank", "noopener,noreferrer")}
                   >
                     View PDF
                   </button>
-
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary flex-grow-1"
+                    onClick={() => {
+                      const link = document.createElement("a");
+                      link.href = a.pdf_file;
+                      link.download = a.title || "article.pdf";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    Download
+                  </button>
                 </div>
+
                 {canManage(a) && (
                   <div className="d-flex gap-2 mt-2">
                     <button

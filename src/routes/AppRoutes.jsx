@@ -23,6 +23,12 @@ import ObservatoryPostDetail from '../pages/ObservatoryPostDetail';
 import Opportunities from '../pages/Opportunities';
 import Apply from '../pages/Apply';
 import ApplyConfirmation from '../pages/ApplyConfirmation';
+import Articles from '../pages/Articles';
+import ArticleDetail from '../pages/ArticleDetail';
+import Calendar from '../pages/Calendar';
+import Donate from '../pages/Donate';
+
+
 
 
 
@@ -43,7 +49,11 @@ export default function AppRoutes() {
       <Route path="/opportunities" element={<Opportunities />} />
       <Route path="/apply" element={<Apply />} />
       <Route path="/apply/confirmation" element={<ApplyConfirmation />} /> 
+     <Route path="/articles" element={<Articles />} />
+      <Route path="/articles/:slug" element={<ArticleDetail />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/donate" element={<Donate />} />
+      <Route path="/calendar" element={<Calendar />} />
 
       <Route
         path="/admin"

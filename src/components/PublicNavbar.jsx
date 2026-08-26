@@ -5,10 +5,13 @@ const NAV_LINKS = [
   { label: "About", type: "scroll", target: "about" },
   { label: "Programmes", type: "scroll", target: "programmes" },
   { label: "The Observatory", type: "scroll", target: "observatory" },
+  { label: "Team Members", type: "scroll", target: "team-members" },
   { label: "Collegium", type: "scroll", target: "collegium" },
   { label: "Impact", type: "scroll", target: "impact" },
   { label: "Calendar", type: "page", path: "/calendar" },
   { label: "Articles", type: "page", path: "/articles" },
+  { label: "Review", type: "scroll", target: "review" },
+  { label: "Contact", type: "scroll", target: "contact" },
 ];
 
 function PublicNavbar() {
