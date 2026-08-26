@@ -42,16 +42,16 @@ function PublicNavbar() {
       <nav className="bg-white border-bottom sticky-top">
         <div className="container d-flex align-items-center justify-content-between py-3">
           <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
-            <span style={{ fontSize: "1.4rem" }}>⛪</span>
-            <div>
-              <div className="text-uppercase text-muted" style={{ fontSize: "0.65rem", letterSpacing: "1px" }}>
-                THE
-              </div>
-              <div className="text-navy fw-bold" style={{ fontSize: "1.1rem", lineHeight: 1 }}>
-                Clarridge
-              </div>
-            </div>
-          </Link>
+  <img src="/logo.png" alt="The Clarridge" style={{ height: "36px", width: "auto" }} />
+  <div>
+    <div className="text-uppercase text-muted" style={{ fontSize: "0.65rem", letterSpacing: "1px" }}>
+      THE
+    </div>
+    <div className="text-navy fw-bold" style={{ fontSize: "1.1rem", lineHeight: 1 }}>
+      Clarridge
+    </div>
+  </div>
+</Link>
 
           <div className="d-none d-lg-flex align-items-center gap-4">
             {NAV_LINKS.map((link) => (

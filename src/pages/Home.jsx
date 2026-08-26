@@ -233,829 +233,863 @@ function Home() {
       : observatoryPosts.filter((p) => p.category === observatoryTab).slice(0, 3);
 
   return (
-    <div>
-      <PublicNavbar />
+    <div style={{ position: "relative", backgroundColor: "#fff" }}>
+      {/* Fixed full-page faint logo watermark, sits behind everything */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        <img
+          src="/logo.png"
+          alt=""
+          style={{
+            width: "700px",
+            maxWidth: "80vw",
+            opacity: 0.08,
+            pointerEvents: "none",
+          }}
+        />
+      </div>
 
-      {/* Hero — also serves as "About" */}
-      <section id="about" style={{ backgroundColor: "var(--clarridge-navy)" }} className="text-white py-5">
-        <div className="container py-5" style={{ maxWidth: "800px" }}>
-          <div className="d-flex align-items-center gap-2 mb-3">
-            <span style={{ width: "40px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "2px" }}>
-              A Tradition of Excellence
-            </span>
-          </div>
-          <h1 className="fw-normal mb-4" style={{ fontSize: "2.75rem", lineHeight: 1.2 }}>
-            We believe talent is universal. Opportunity should be too.
-          </h1>
-          <p className="text-white-50 mb-4" style={{ fontSize: "1.05rem", maxWidth: "600px" }}>
-            The Clarridge prepares Nigeria's students to become globally competitive
-            candidates, then bridges them to the opportunities that follow.
-          </p>
-          <div className="d-flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="btn fw-bold px-4 py-2"
-              style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
-              onClick={() => document.getElementById("programmes")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              Explore Our Work
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-light px-4 py-2"
-              onClick={() => navigate("/opportunities")}
-            >
-              View Opportunities
-            </button>
-          </div>
-        </div>
-      </section>
+      {/* All real content, explicitly stacked above the background */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <PublicNavbar />
 
-      {/* Programmes — single unified section */}
-      <section id="programmes" className="py-5" style={{ backgroundColor: "#f8f9fb" }}>
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              Programmes
-            </span>
-          </div>
-
-          <h2 className="text-navy fw-normal mb-2" style={{ fontSize: "2rem" }}>
-            Creating pathways to excellence.
-          </h2>
-
-          {statusFilter === "open" && (
-            <p
-              className="text-uppercase fw-semibold mb-2"
-              style={{ color: "var(--clarridge-gold)", fontSize: "0.85rem", letterSpacing: "0.5px" }}
-            >
-              Current Opportunities
+        {/* Hero — also serves as "About" */}
+        <section
+          id="about"
+          className="text-white py-5"
+          style={{ backgroundColor: "rgba(10, 31, 68, 0.97)" }}
+        >
+          <div className="container py-5" style={{ maxWidth: "800px" }}>
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <span style={{ width: "40px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "2px" }}>
+                A Tradition of Excellence
+              </span>
+            </div>
+            <h1 className="fw-normal mb-4" style={{ fontSize: "2.75rem", lineHeight: 1.2 }}>
+              We believe talent is universal. Opportunity should be too.
+            </h1>
+            <p className="text-white-50 mb-4" style={{ fontSize: "1.05rem", maxWidth: "600px" }}>
+              The Clarridge prepares Nigeria's students to become globally competitive
+              candidates, then bridges them to the opportunities that follow.
             </p>
-          )}
-
-          <p className="text-muted mb-4" style={{ maxWidth: "600px" }}>
-            Every programme with a current or upcoming application window.
-          </p>
-
-          <div className="d-flex flex-wrap gap-2 mb-4">
-            {["open", "upcoming", "completed"].map((s) => (
+            <div className="d-flex flex-wrap gap-3">
               <button
-                key={s}
                 type="button"
-                className="btn btn-sm rounded-pill fw-semibold px-3"
-                style={
-                  statusFilter === s
-                    ? { backgroundColor: "var(--clarridge-navy)", color: "#fff", border: "1px solid var(--clarridge-navy)" }
-                    : { backgroundColor: "#fff", color: "var(--clarridge-navy)", border: "1px solid #ddd" }
-                }
-                onClick={() => handleStatusFilterChange(s)}
+                className="btn fw-bold px-4 py-2"
+                style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
+                onClick={() => document.getElementById("programmes")?.scrollIntoView({ behavior: "smooth" })}
               >
-                {statusLabel(s).toUpperCase()}
+                Explore Our Work
               </button>
-            ))}
+              <button
+                type="button"
+                className="btn btn-outline-light px-4 py-2"
+                onClick={() => navigate("/opportunities")}
+              >
+                View Opportunities
+              </button>
+            </div>
           </div>
+        </section>
 
-          {loadingProgrammes ? (
-            <ColdStartLoader />
-          ) : programmesError ? (
-            <div className="alert alert-danger">{programmesError}</div>
-          ) : filteredProgrammes.length === 0 ? (
-            <p className="text-muted">No {statusLabel(statusFilter).toLowerCase()} programmes right now.</p>
-          ) : (
-            <>
-              <div className="row g-3">
-                {displayedProgrammes.map((p) => (
-                  <div className="col-12 col-md-6 col-lg-4" key={p.id}>
-                    <div
-                      className="bg-white rounded p-4 h-100"
-                      role="button"
-                      onClick={() => setSelectedProgramme(p)}
-                      style={{ border: "1px solid #e5e7eb", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
-                      <div className="d-flex align-items-center gap-3 mb-3">
-                        {p.cover_image ? (
-                          <img
-                            src={p.cover_image}
-                            alt={p.name}
-                            style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-                          />
-                        ) : (
-                          <div
-                            className="d-flex align-items-center justify-content-center bg-light text-muted rounded-circle"
-                            style={{ width: "48px", height: "48px", fontSize: "0.65rem", flexShrink: 0 }}
-                          >
-                            N/A
-                          </div>
-                        )}
-                        <span
-                          className="badge rounded-pill fw-semibold px-3 py-2 text-uppercase"
-                          style={{ ...statusPillStyle(p.status), fontSize: "0.7rem", border: "1px solid" }}
-                        >
-                          ● {statusLabel(p.status)}
-                        </span>
-                      </div>
-                      <h5 className="text-navy fw-bold mb-2">{p.name}</h5>
-                      {p.description && <p className="text-muted small mb-3">{p.description}</p>}
-                      {p.status === "open" && p.end_date && (
-                        <p className="small mb-0" style={{ color: "var(--clarridge-gold)" }}>
-                          <strong>Deadline:</strong> {new Date(p.end_date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
-                        </p>
-                      )}
-                      {p.status === "upcoming" && p.start_date && (
-                        <p className="small mb-0" style={{ color: "var(--clarridge-gold)" }}>
-                          <strong>Opens:</strong> {new Date(p.start_date).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        {/* Programmes — single unified section */}
+        <section id="programmes" className="py-5" style={{ backgroundColor: "rgba(248, 249, 251, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                Programmes
+              </span>
+            </div>
 
-              {filteredProgrammes.length > 5 && (
+            <h2 className="text-navy fw-normal mb-2" style={{ fontSize: "2rem" }}>
+              Creating pathways to excellence.
+            </h2>
+
+            {statusFilter === "open" && (
+              <p
+                className="text-uppercase fw-semibold mb-2"
+                style={{ color: "var(--clarridge-gold)", fontSize: "0.85rem", letterSpacing: "0.5px" }}
+              >
+                Current Opportunities
+              </p>
+            )}
+
+            <p className="text-muted mb-4" style={{ maxWidth: "600px" }}>
+              Every programme with a current or upcoming application window.
+            </p>
+
+            <div className="d-flex flex-wrap gap-2 mb-4">
+              {["open", "upcoming", "completed"].map((s) => (
                 <button
+                  key={s}
                   type="button"
-                  className="btn btn-link text-navy fw-semibold text-decoration-none p-0 mt-4"
-                  onClick={() => setShowAllProgrammes((prev) => !prev)}
+                  className="btn btn-sm rounded-pill fw-semibold px-3"
+                  style={
+                    statusFilter === s
+                      ? { backgroundColor: "var(--clarridge-navy)", color: "#fff", border: "1px solid var(--clarridge-navy)" }
+                      : { backgroundColor: "#fff", color: "var(--clarridge-navy)", border: "1px solid #ddd" }
+                  }
+                  onClick={() => handleStatusFilterChange(s)}
                 >
-                  {showAllProgrammes ? "Show Less ↑" : "View All Programmes →"}
+                  {statusLabel(s).toUpperCase()}
                 </button>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+              ))}
+            </div>
 
-      {/* The Observatory */}
-      <section id="observatory" className="py-5">
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              The Observatory
-            </span>
-          </div>
-          <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "2rem" }}>
-            Ideas. Research. Perspective.
-          </h2>
-
-          <div className="d-flex flex-wrap gap-4 mb-4" style={{ borderBottom: "1px solid #e5e7eb" }}>
-            {OBSERVATORY_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                type="button"
-                className="btn btn-link text-decoration-none p-0 pb-2 fw-semibold"
-                style={{
-                  fontSize: "0.95rem",
-                  color: observatoryTab === tab.value ? "var(--clarridge-navy)" : "#6c757d",
-                  borderBottom: observatoryTab === tab.value ? "2px solid var(--clarridge-gold)" : "2px solid transparent",
-                  borderRadius: 0,
-                }}
-                onClick={() => setObservatoryTab(tab.value)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {loadingObservatory ? (
-            <ColdStartLoader />
-          ) : (
-            <>
-              {observatoryTab === "featured" && featuredPost && (
-                <div
-                  className="row g-4 mb-4"
-                  role="button"
-                  onClick={() => navigate(`/observatory/${featuredPost.slug}`)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="col-12 col-md-6">
-                    {featuredPost.cover_image ? (
-                      <img
-                        src={featuredPost.cover_image}
-                        alt={featuredPost.title}
-                        style={{ width: "100%", height: "320px", objectFit: "cover", borderRadius: "6px" }}
-                      />
-                    ) : (
+            {loadingProgrammes ? (
+              <ColdStartLoader />
+            ) : programmesError ? (
+              <div className="alert alert-danger">{programmesError}</div>
+            ) : filteredProgrammes.length === 0 ? (
+              <p className="text-muted">No {statusLabel(statusFilter).toLowerCase()} programmes right now.</p>
+            ) : (
+              <>
+                <div className="row g-3">
+                  {displayedProgrammes.map((p) => (
+                    <div className="col-12 col-md-6 col-lg-4" key={p.id}>
                       <div
-                        className="bg-light d-flex align-items-center justify-content-center text-muted"
-                        style={{ width: "100%", height: "320px", borderRadius: "6px", fontSize: "3rem" }}
-                      >
-                        🖼️
-                      </div>
-                    )}
-                  </div>
-                  <div className="col-12 col-md-6 d-flex flex-column justify-content-center">
-                    <div className="small fw-semibold mb-2" style={{ color: "var(--clarridge-gold)" }}>
-                      FEATURED · {categoryDisplayLabel(featuredPost.category).toUpperCase()}
-                    </div>
-                    <h3 className="text-navy fw-normal mb-3">{featuredPost.title}</h3>
-                    <p className="text-muted mb-3">{featuredPost.summary}</p>
-                    <p className="small text-muted mb-0">
-                      {new Date(featuredPost.date_posted).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · {featuredPost.read_time_minutes} min read
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {observatoryFiltered.length === 0 ? (
-                <p className="text-muted">No posts in this category yet.</p>
-              ) : (
-                <div className="row g-4">
-                  {observatoryFiltered.map((post) => (
-                    <div className="col-12 col-md-4" key={post.id}>
-                      <div
+                        className="bg-white rounded p-4 h-100"
                         role="button"
-                        onClick={() => navigate(`/observatory/${post.slug}`)}
-                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedProgramme(p)}
+                        style={{ border: "1px solid #e5e7eb", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
                       >
-                        {post.cover_image ? (
-                          <img
-                            src={post.cover_image}
-                            alt={post.title}
-                            style={{ width: "100%", height: "180px", objectFit: "cover", borderRadius: "6px" }}
-                            className="mb-3"
-                          />
-                        ) : (
-                          <div
-                            className="bg-light d-flex align-items-center justify-content-center text-muted mb-3"
-                            style={{ width: "100%", height: "180px", borderRadius: "6px", fontSize: "2rem" }}
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                          {p.cover_image ? (
+                            <img
+                              src={p.cover_image}
+                              alt={p.name}
+                              style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+                            />
+                          ) : (
+                            <div
+                              className="d-flex align-items-center justify-content-center bg-light text-muted rounded-circle"
+                              style={{ width: "48px", height: "48px", fontSize: "0.65rem", flexShrink: 0 }}
+                            >
+                              N/A
+                            </div>
+                          )}
+                          <span
+                            className="badge rounded-pill fw-semibold px-3 py-2 text-uppercase"
+                            style={{ ...statusPillStyle(p.status), fontSize: "0.7rem", border: "1px solid" }}
                           >
-                            🖼️
-                          </div>
-                        )}
-                        <div className="small fw-semibold mb-1" style={{ color: "var(--clarridge-gold)" }}>
-                          {categoryDisplayLabel(post.category).toUpperCase()}
+                            ● {statusLabel(p.status)}
+                          </span>
                         </div>
-                        <h6 className="text-navy fw-bold mb-2">{post.title}</h6>
-                        <p className="small text-muted mb-0">
-                          {new Date(post.date_posted).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · {post.read_time_minutes} min read
-                        </p>
+                        <h5 className="text-navy fw-bold mb-2">{p.name}</h5>
+                        {p.description && <p className="text-muted small mb-3">{p.description}</p>}
+                        {p.status === "open" && p.end_date && (
+                          <p className="small mb-0" style={{ color: "var(--clarridge-gold)" }}>
+                            <strong>Deadline:</strong> {new Date(p.end_date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
+                          </p>
+                        )}
+                        {p.status === "upcoming" && p.start_date && (
+                          <p className="small mb-0" style={{ color: "var(--clarridge-gold)" }}>
+                            <strong>Opens:</strong> {new Date(p.start_date).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
 
-      {/* Team Members */}
-      <section id="team-members" className="py-5" style={{ backgroundColor: "#f8f9fb" }}>
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              Team Members
-            </span>
+                {filteredProgrammes.length > 5 && (
+                  <button
+                    type="button"
+                    className="btn btn-link text-navy fw-semibold text-decoration-none p-0 mt-4"
+                    onClick={() => setShowAllProgrammes((prev) => !prev)}
+                  >
+                    {showAllProgrammes ? "Show Less ↑" : "View All Programmes →"}
+                  </button>
+                )}
+              </>
+            )}
           </div>
-          <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
-            The people behind The Clarridge.
-          </h2>
+        </section>
 
-          {loadingTeamMembers ? (
-            <ColdStartLoader />
-          ) : teamMembers.length === 0 ? (
-            <p className="text-muted">No team members to show yet.</p>
-          ) : (
-            <>
-              <div className="row g-3 mb-4">
-                {(showAllTeamMembers ? teamMembers : teamMembers.slice(0, 4)).map((m) => (
-                  <div className="col-12 col-md-6 col-lg-3" key={m.id}>
-                    <div
-                      className="bg-white p-4 text-center h-100"
-                      role="button"
-                      onClick={() => setSelectedTeamMember(m)}
-                      style={{ border: "1px solid #e5e7eb", borderRadius: "6px", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
-                      {m.passport_photo ? (
+        {/* The Observatory */}
+        <section id="observatory" className="py-5" style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                The Observatory
+              </span>
+            </div>
+            <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "2rem" }}>
+              Ideas. Research. Perspective.
+            </h2>
+
+            <div className="d-flex flex-wrap gap-4 mb-4" style={{ borderBottom: "1px solid #e5e7eb" }}>
+              {OBSERVATORY_TABS.map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  className="btn btn-link text-decoration-none p-0 pb-2 fw-semibold"
+                  style={{
+                    fontSize: "0.95rem",
+                    color: observatoryTab === tab.value ? "var(--clarridge-navy)" : "#6c757d",
+                    borderBottom: observatoryTab === tab.value ? "2px solid var(--clarridge-gold)" : "2px solid transparent",
+                    borderRadius: 0,
+                  }}
+                  onClick={() => setObservatoryTab(tab.value)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {loadingObservatory ? (
+              <ColdStartLoader />
+            ) : (
+              <>
+                {observatoryTab === "featured" && featuredPost && (
+                  <div
+                    className="row g-4 mb-4"
+                    role="button"
+                    onClick={() => navigate(`/observatory/${featuredPost.slug}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="col-12 col-md-6">
+                      {featuredPost.cover_image ? (
                         <img
-                          src={m.passport_photo}
-                          alt={`${m.first_name} ${m.last_name}`}
-                          style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover" }}
-                          className="mb-3"
+                          src={featuredPost.cover_image}
+                          alt={featuredPost.title}
+                          style={{ width: "100%", height: "320px", objectFit: "cover", borderRadius: "6px" }}
                         />
                       ) : (
                         <div
-                          className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
-                          style={{ width: "64px", height: "64px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold" }}
+                          className="bg-light d-flex align-items-center justify-content-center text-muted"
+                          style={{ width: "100%", height: "320px", borderRadius: "6px", fontSize: "3rem" }}
                         >
-                          {`${m.first_name?.[0] || ""}${m.last_name?.[0] || ""}`.toUpperCase()}
+                          🖼️
                         </div>
                       )}
-                      <div className="fw-bold text-navy">{m.first_name} {m.last_name}</div>
-                      <div className="small text-muted">{m.email}</div>
                     </div>
-                  </div>
-                ))}
-              </div>
-
-              {teamMembers.length > 4 && (
-                <button
-                  type="button"
-                  className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
-                  onClick={() => setShowAllTeamMembers((prev) => !prev)}
-                >
-                  {showAllTeamMembers ? "Show Less ↑" : "View All Members →"}
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Impact stats band */}
-      <section id="impact" className="py-5" style={{ backgroundColor: "var(--clarridge-navy)" }}>
-        <div className="container">
-          <div className="row align-items-center g-4">
-            <div className="col-12 col-md-7">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-                <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-                  Our Impact
-                </span>
-              </div>
-              <h2 className="text-white fw-normal mb-0" style={{ fontSize: "1.75rem" }}>
-                Building a culture of possibility.
-              </h2>
-            </div>
-            <div className="col-12 col-md-5">
-              <div className="d-flex justify-content-around text-white text-center">
-                <div>
-                  <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
-                    {impactStats.studentsReached !== null ? `${impactStats.studentsReached}+` : "—"}
-                  </div>
-                  <div className="small text-white-50">Students Reached</div>
-                </div>
-                <div>
-                  <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
-                    {impactStats.universityCount !== null ? `${impactStats.universityCount}+` : "—"}
-                  </div>
-                  <div className="small text-white-50">Universities</div>
-                </div>
-                <div>
-                  <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
-                    {impactStats.programmeCount !== null ? `${impactStats.programmeCount}+` : "—"}
-                  </div>
-                  <div className="small text-white-50">Programmes</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Collegium teaser strip — expands in place */}
-      <section id="collegium" className="py-5">
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              The Clarridge Collegium
-            </span>
-          </div>
-          <h2 className="text-navy fw-normal mb-3" style={{ fontSize: "1.75rem" }}>
-            Students at the table.
-          </h2>
-          <p className="text-muted mb-4" style={{ maxWidth: "600px" }}>
-            The Collegium is The Clarridge's student advisory body — a forum through which
-            students contribute perspective, counsel and ideas to the institution.
-          </p>
-
-          {loadingMembers ? (
-            <ColdStartLoader />
-          ) : allMembers.length === 0 ? (
-            <p className="text-muted">No members to show yet.</p>
-          ) : (
-            <>
-              <div className="row g-3 mb-4">
-                {(showAllMembers ? allMembers : allMembers.slice(0, 4)).map((m) => (
-                  <div className="col-12 col-md-6 col-lg-3" key={m.id}>
-                    <div
-                      className="bg-white p-4 text-center h-100"
-                      role="button"
-                      onClick={() => setSelectedMember(m)}
-                      style={{ border: "1px solid #e5e7eb", borderRadius: "6px", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
-                      {m.photo ? (
-                        <img
-                          src={m.photo}
-                          alt={m.member_name}
-                          style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover" }}
-                          className="mb-3"
-                        />
-                      ) : (
-                        <div
-                          className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
-                          style={{ width: "64px", height: "64px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold" }}
-                        >
-                          {initials(m.member_name)}
-                        </div>
-                      )}
-                      <div className="fw-bold text-navy">{m.member_name}</div>
-                      <div className="small text-muted">{m.school}, {m.field}</div>
-                      <div className="small fw-semibold mt-2" style={{ color: "var(--clarridge-gold)" }}>
-                        Member, The Collegium
+                    <div className="col-12 col-md-6 d-flex flex-column justify-content-center">
+                      <div className="small fw-semibold mb-2" style={{ color: "var(--clarridge-gold)" }}>
+                        FEATURED · {categoryDisplayLabel(featuredPost.category).toUpperCase()}
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {allMembers.length > 4 && (
-                <button
-                  type="button"
-                  className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
-                  onClick={() => setShowAllMembers((prev) => !prev)}
-                >
-                  {showAllMembers ? "Show Less ↑" : "View All Members →"}
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Voices — What They Say (Testimonials) */}
-      <section id="review" className="py-5" style={{ backgroundColor: "#f8f9fb" }}>
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              Voices
-            </span>
-          </div>
-          <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
-            What they say.
-          </h2>
-
-          {loadingTestimonials ? (
-            <ColdStartLoader />
-          ) : testimonials.length === 0 ? (
-            <p className="text-muted">No testimonials yet.</p>
-          ) : (
-            <>
-              <div className="row g-3 mb-4">
-                {(showAllTestimonials ? testimonials : testimonials.slice(0, 3)).map((t) => (
-                  <div className="col-12 col-md-6 col-lg-3" key={t.id}>
-                    <div className="bg-white p-4 h-100" style={{ border: "1px solid #e5e7eb", borderRadius: "6px" }}>
-                      <div style={{ fontSize: "1.5rem", color: "var(--clarridge-gold)" }}>&ldquo;</div>
-                      <p className="text-muted small mb-3" style={{ minHeight: "80px" }}>{t.content}</p>
-                      <div className="d-flex align-items-center gap-2 pt-2" style={{ borderTop: "1px solid #e5e7eb" }}>
-                        <div
-                          className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-                          style={{ width: "32px", height: "32px", backgroundColor: "var(--clarridge-navy)", color: "#fff", fontSize: "0.8rem", fontWeight: "bold" }}
-                        >
-                          {t.submitted_by?.[0]?.toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="small fw-bold text-navy">{t.submitted_by}</div>
-                          <div className="small text-muted">{t.programme}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {!showAllTestimonials && (
-                  <div className="col-12 col-md-6 col-lg-3">
-                    <div
-                      className="p-4 h-100 d-flex flex-column justify-content-center"
-                      style={{ backgroundColor: "#f0f1f3", borderRadius: "6px" }}
-                    >
-                      <div className="fw-bold text-navy mb-1">Share your experience</div>
-                      <p className="small text-muted mb-3">Your story can inspire someone else.</p>
-                      <span
-                        role="button"
-                        className="small fw-semibold"
-                        style={{ color: "var(--clarridge-gold)" }}
-                        onClick={openShareStoryModal}
-                      >
-                        Share Your Story →
-                      </span>
+                      <h3 className="text-navy fw-normal mb-3">{featuredPost.title}</h3>
+                      <p className="text-muted mb-3">{featuredPost.summary}</p>
+                      <p className="small text-muted mb-0">
+                        {new Date(featuredPost.date_posted).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · {featuredPost.read_time_minutes} min read
+                      </p>
                     </div>
                   </div>
                 )}
-              </div>
 
-              {testimonials.length > 3 && (
-                <button
-                  type="button"
-                  className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
-                  onClick={() => setShowAllTestimonials((prev) => !prev)}
-                >
-                  {showAllTestimonials ? "Show Less ↑" : "View All Reviews →"}
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Contact */}
-      <section id="contact" className="py-5">
-        <div className="container">
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
-            <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
-              Get in Touch
-            </span>
-          </div>
-          <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
-            We&apos;d love to hear from you.
-          </h2>
-
-          <div className="row g-4">
-            <div className="col-12 col-md-5">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <span>✉️</span>
-                <span className="text-navy">hello@theclarridge.org</span>
-              </div>
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <span>📞</span>
-                <span className="text-navy">+234 801 234 5678</span>
-              </div>
-              <div className="d-flex align-items-center gap-2">
-                <span>📍</span>
-                <span className="text-navy">Lagos, Nigeria</span>
-              </div>
-            </div>
-
-            <div className="col-12 col-md-7">
-              {contactSuccess && <div className="alert alert-success py-2 small">{contactSuccess}</div>}
-              {contactError && <div className="alert alert-danger py-2 small">{contactError}</div>}
-
-              <form onSubmit={handleContactSubmit}>
-                <div className="mb-3">
-                  <label className="small fw-semibold mb-1 d-block">Your Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={contactForm.name}
-                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                    disabled={submittingContact}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="small fw-semibold mb-1 d-block">Your Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    value={contactForm.email}
-                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                    disabled={submittingContact}
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="small fw-semibold mb-1 d-block">Subject</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={contactForm.subject}
-                    onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                    disabled={submittingContact}
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="small fw-semibold mb-1 d-block">Message</label>
-                  <textarea
-                    className="form-control"
-                    rows={4}
-                    value={contactForm.message}
-                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    disabled={submittingContact}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-navy px-4" disabled={submittingContact}>
-                  {submittingContact ? "Sending..." : "Send Message"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-4" style={{ backgroundColor: "var(--clarridge-navy)" }}>
-        <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-white-50 small">
-          <div>© 2026 The Clarridge</div>
-          <div>hello@theclarridge.org · Lagos, Nigeria</div>
-        </div>
-      </footer>
-
-      {/* Programme details modal */}
-      {selectedProgramme && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
-          onClick={() => setSelectedProgramme(null)}
-        >
-          <div
-            className="bg-white rounded overflow-hidden"
-            style={{ maxWidth: "480px", width: "90%", maxHeight: "85vh", overflowY: "auto" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {selectedProgramme.cover_image && (
-              <img
-                src={selectedProgramme.cover_image}
-                alt={selectedProgramme.name}
-                style={{ width: "100%", height: "180px", objectFit: "cover" }}
-              />
+                {observatoryFiltered.length === 0 ? (
+                  <p className="text-muted">No posts in this category yet.</p>
+                ) : (
+                  <div className="row g-4">
+                    {observatoryFiltered.map((post) => (
+                      <div className="col-12 col-md-4" key={post.id}>
+                        <div
+                          role="button"
+                          onClick={() => navigate(`/observatory/${post.slug}`)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {post.cover_image ? (
+                            <img
+                              src={post.cover_image}
+                              alt={post.title}
+                              style={{ width: "100%", height: "180px", objectFit: "cover", borderRadius: "6px" }}
+                              className="mb-3"
+                            />
+                          ) : (
+                            <div
+                              className="bg-light d-flex align-items-center justify-content-center text-muted mb-3"
+                              style={{ width: "100%", height: "180px", borderRadius: "6px", fontSize: "2rem" }}
+                            >
+                              🖼️
+                            </div>
+                          )}
+                          <div className="small fw-semibold mb-1" style={{ color: "var(--clarridge-gold)" }}>
+                            {categoryDisplayLabel(post.category).toUpperCase()}
+                          </div>
+                          <h6 className="text-navy fw-bold mb-2">{post.title}</h6>
+                          <p className="small text-muted mb-0">
+                            {new Date(post.date_posted).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · {post.read_time_minutes} min read
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
-            <div className="p-4">
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <span
-                  className="badge rounded-pill fw-semibold px-3 py-2 text-uppercase"
-                  style={{ ...statusPillStyle(selectedProgramme.status), fontSize: "0.7rem", border: "1px solid" }}
-                >
-                  ● {statusLabel(selectedProgramme.status)}
-                </span>
-                <button type="button" className="btn-close" onClick={() => setSelectedProgramme(null)} />
-              </div>
-
-              <h4 className="text-navy fw-bold mb-3">{selectedProgramme.name}</h4>
-
-              {selectedProgramme.description && (
-                <p className="text-muted mb-3">{selectedProgramme.description}</p>
-              )}
-
-              {(selectedProgramme.start_date || selectedProgramme.end_date) && (
-                <p className="small text-muted mb-4">
-                  {selectedProgramme.start_date || "—"} → {selectedProgramme.end_date || "—"}
-                </p>
-              )}
-
-              <button
-                type="button"
-                className="btn w-100 fw-bold py-2"
-                style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
-                onClick={() => navigate("/apply")}
-              >
-                Apply Now
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        </section>
 
-      {/* Collegium member details modal */}
-      {selectedMember && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
-          onClick={() => setSelectedMember(null)}
-        >
-          <div
-            className="bg-white rounded p-4 text-center"
-            style={{ maxWidth: "360px", width: "90%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="d-flex justify-content-end mb-2">
-              <button type="button" className="btn-close" onClick={() => setSelectedMember(null)} />
+        {/* Team Members */}
+        <section id="team-members" className="py-5" style={{ backgroundColor: "rgba(248, 249, 251, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                Team Members
+              </span>
             </div>
+            <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
+              The people behind The Clarridge.
+            </h2>
 
-            {selectedMember.photo ? (
-              <img
-                src={selectedMember.photo}
-                alt={selectedMember.member_name}
-                style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover" }}
-                className="mb-3"
-              />
-            ) : (
-              <div
-                className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
-                style={{ width: "96px", height: "96px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold", fontSize: "1.5rem" }}
-              >
-                {initials(selectedMember.member_name)}
-              </div>
-            )}
-
-            <h5 className="text-navy fw-bold mb-1">{selectedMember.member_name}</h5>
-            <p className="text-muted mb-2">{selectedMember.school}, {selectedMember.field}</p>
-            <div className="small fw-semibold" style={{ color: "var(--clarridge-gold)" }}>
-              Member, The Collegium
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Team member details modal */}
-      {selectedTeamMember && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
-          onClick={() => setSelectedTeamMember(null)}
-        >
-          <div
-            className="bg-white rounded p-4 text-center"
-            style={{ maxWidth: "360px", width: "90%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="d-flex justify-content-end mb-2">
-              <button type="button" className="btn-close" onClick={() => setSelectedTeamMember(null)} />
-            </div>
-            {selectedTeamMember.passport_photo ? (
-              <img
-                src={selectedTeamMember.passport_photo}
-                alt={`${selectedTeamMember.first_name} ${selectedTeamMember.last_name}`}
-                style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover" }}
-                className="mb-3"
-              />
-            ) : (
-              <div
-                className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
-                style={{ width: "96px", height: "96px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold", fontSize: "1.5rem" }}
-              >
-                {`${selectedTeamMember.first_name?.[0] || ""}${selectedTeamMember.last_name?.[0] || ""}`.toUpperCase()}
-              </div>
-            )}
-            <h5 className="text-navy fw-bold mb-1">{selectedTeamMember.first_name} {selectedTeamMember.last_name}</h5>
-            <p className="text-muted mb-0">{selectedTeamMember.email}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Share Your Story modal */}
-      {showShareStoryModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
-          onClick={closeShareStoryModal}
-        >
-          <div
-            className="bg-white rounded p-4"
-            style={{ maxWidth: "440px", width: "90%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="text-navy fw-bold mb-0">Share Your Story</h5>
-              <button type="button" className="btn-close" onClick={closeShareStoryModal} disabled={submittingStory} />
-            </div>
-
-            {storySuccess ? (
-              <div className="alert alert-success">{storySuccess}</div>
+            {loadingTeamMembers ? (
+              <ColdStartLoader />
+            ) : teamMembers.length === 0 ? (
+              <p className="text-muted">No team members to show yet.</p>
             ) : (
               <>
-                {storyError && <div className="alert alert-danger py-2 small">{storyError}</div>}
-                <p className="small text-muted mb-3">
-                  Your story will be reviewed by our team before it's published.
-                </p>
-                <form onSubmit={handleStorySubmit}>
+                <div className="row g-3 mb-4">
+                  {(showAllTeamMembers ? teamMembers : teamMembers.slice(0, 4)).map((m) => (
+                    <div className="col-12 col-md-6 col-lg-3" key={m.id}>
+                      <div
+                        className="bg-white p-4 text-center h-100"
+                        role="button"
+                        onClick={() => setSelectedTeamMember(m)}
+                        style={{ border: "1px solid #e5e7eb", borderRadius: "6px", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+                      >
+                        {m.passport_photo ? (
+                          <img
+                            src={m.passport_photo}
+                            alt={`${m.first_name} ${m.last_name}`}
+                            style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover" }}
+                            className="mb-3"
+                          />
+                        ) : (
+                          <div
+                            className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
+                            style={{ width: "64px", height: "64px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold" }}
+                          >
+                            {`${m.first_name?.[0] || ""}${m.last_name?.[0] || ""}`.toUpperCase()}
+                          </div>
+                        )}
+                        <div className="fw-bold text-navy">{m.first_name} {m.last_name}</div>
+                        <div className="small text-muted">{m.email}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {teamMembers.length > 4 && (
+                  <button
+                    type="button"
+                    className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
+                    onClick={() => setShowAllTeamMembers((prev) => !prev)}
+                  >
+                    {showAllTeamMembers ? "Show Less ↑" : "View All Members →"}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Impact stats band */}
+        <section id="impact" className="py-5" style={{ backgroundColor: "rgba(10, 31, 68, 0.97)" }}>
+          <div className="container">
+            <div className="row align-items-center g-4">
+              <div className="col-12 col-md-7">
+                <div className="d-flex align-items-center gap-2 mb-2">
+                  <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+                  <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                    Our Impact
+                  </span>
+                </div>
+                <h2 className="text-white fw-normal mb-0" style={{ fontSize: "1.75rem" }}>
+                  Building a culture of possibility.
+                </h2>
+              </div>
+              <div className="col-12 col-md-5">
+                <div className="d-flex justify-content-around text-white text-center">
+                  <div>
+                    <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
+                      {impactStats.studentsReached !== null ? `${impactStats.studentsReached}+` : "—"}
+                    </div>
+                    <div className="small text-white-50">Students Reached</div>
+                  </div>
+                  <div>
+                    <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
+                      {impactStats.universityCount !== null ? `${impactStats.universityCount}+` : "—"}
+                    </div>
+                    <div className="small text-white-50">Universities</div>
+                  </div>
+                  <div>
+                    <div className="fw-bold" style={{ fontSize: "1.75rem" }}>
+                      {impactStats.programmeCount !== null ? `${impactStats.programmeCount}+` : "—"}
+                    </div>
+                    <div className="small text-white-50">Programmes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Collegium teaser strip — expands in place */}
+        <section id="collegium" className="py-5" style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                The Clarridge Collegium
+              </span>
+            </div>
+            <h2 className="text-navy fw-normal mb-3" style={{ fontSize: "1.75rem" }}>
+              Students at the table.
+            </h2>
+            <p className="text-muted mb-4" style={{ maxWidth: "600px" }}>
+              The Collegium is The Clarridge's student advisory body — a forum through which
+              students contribute perspective, counsel and ideas to the institution.
+            </p>
+
+            {loadingMembers ? (
+              <ColdStartLoader />
+            ) : allMembers.length === 0 ? (
+              <p className="text-muted">No members to show yet.</p>
+            ) : (
+              <>
+                <div className="row g-3 mb-4">
+                  {(showAllMembers ? allMembers : allMembers.slice(0, 4)).map((m) => (
+                    <div className="col-12 col-md-6 col-lg-3" key={m.id}>
+                      <div
+                        className="bg-white p-4 text-center h-100"
+                        role="button"
+                        onClick={() => setSelectedMember(m)}
+                        style={{ border: "1px solid #e5e7eb", borderRadius: "6px", cursor: "pointer", transition: "box-shadow 0.15s ease" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(10,31,68,0.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+                      >
+                        {m.photo ? (
+                          <img
+                            src={m.photo}
+                            alt={m.member_name}
+                            style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover" }}
+                            className="mb-3"
+                          />
+                        ) : (
+                          <div
+                            className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
+                            style={{ width: "64px", height: "64px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold" }}
+                          >
+                            {initials(m.member_name)}
+                          </div>
+                        )}
+                        <div className="fw-bold text-navy">{m.member_name}</div>
+                        <div className="small text-muted">{m.school}, {m.field}</div>
+                        <div className="small fw-semibold mt-2" style={{ color: "var(--clarridge-gold)" }}>
+                          Member, The Collegium
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {allMembers.length > 4 && (
+                  <button
+                    type="button"
+                    className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
+                    onClick={() => setShowAllMembers((prev) => !prev)}
+                  >
+                    {showAllMembers ? "Show Less ↑" : "View All Members →"}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Voices — What They Say (Testimonials) */}
+        <section id="review" className="py-5" style={{ backgroundColor: "rgba(248, 249, 251, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                Voices
+              </span>
+            </div>
+            <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
+              What they say.
+            </h2>
+
+            {loadingTestimonials ? (
+              <ColdStartLoader />
+            ) : testimonials.length === 0 ? (
+              <p className="text-muted">No testimonials yet.</p>
+            ) : (
+              <>
+                <div className="row g-3 mb-4">
+                  {(showAllTestimonials ? testimonials : testimonials.slice(0, 3)).map((t) => (
+                    <div className="col-12 col-md-6 col-lg-3" key={t.id}>
+                      <div className="bg-white p-4 h-100" style={{ border: "1px solid #e5e7eb", borderRadius: "6px" }}>
+                        <div style={{ fontSize: "1.5rem", color: "var(--clarridge-gold)" }}>&ldquo;</div>
+                        <p className="text-muted small mb-3" style={{ minHeight: "80px" }}>{t.content}</p>
+                        <div className="d-flex align-items-center gap-2 pt-2" style={{ borderTop: "1px solid #e5e7eb" }}>
+                          <div
+                            className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                            style={{ width: "32px", height: "32px", backgroundColor: "var(--clarridge-navy)", color: "#fff", fontSize: "0.8rem", fontWeight: "bold" }}
+                          >
+                            {t.submitted_by?.[0]?.toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="small fw-bold text-navy">{t.submitted_by}</div>
+                            <div className="small text-muted">{t.programme}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {!showAllTestimonials && (
+                    <div className="col-12 col-md-6 col-lg-3">
+                      <div
+                        className="p-4 h-100 d-flex flex-column justify-content-center"
+                        style={{ backgroundColor: "#f0f1f3", borderRadius: "6px" }}
+                      >
+                        <div className="fw-bold text-navy mb-1">Share your experience</div>
+                        <p className="small text-muted mb-3">Your story can inspire someone else.</p>
+                        <span
+                          role="button"
+                          className="small fw-semibold"
+                          style={{ color: "var(--clarridge-gold)" }}
+                          onClick={openShareStoryModal}
+                        >
+                          Share Your Story →
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {testimonials.length > 3 && (
+                  <button
+                    type="button"
+                    className="btn btn-link text-navy fw-semibold text-decoration-none p-0"
+                    onClick={() => setShowAllTestimonials((prev) => !prev)}
+                  >
+                    {showAllTestimonials ? "Show Less ↑" : "View All Reviews →"}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="py-5" style={{ backgroundColor: "rgba(255, 255, 255, 0.97)" }}>
+          <div className="container">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <span style={{ width: "30px", height: "1px", backgroundColor: "var(--clarridge-gold)" }} />
+              <span className="text-uppercase fw-semibold" style={{ color: "var(--clarridge-gold)", fontSize: "0.8rem", letterSpacing: "1px" }}>
+                Get in Touch
+              </span>
+            </div>
+            <h2 className="text-navy fw-normal mb-4" style={{ fontSize: "1.75rem" }}>
+              We&apos;d love to hear from you.
+            </h2>
+
+            <div className="row g-4">
+              <div className="col-12 col-md-5">
+                <div className="d-flex align-items-center gap-2 mb-3">
+                  <span>✉️</span>
+                  <span className="text-navy">hello@theclarridge.org</span>
+                </div>
+                <div className="d-flex align-items-center gap-2 mb-3">
+                  <span>📞</span>
+                  <span className="text-navy">+234 801 234 5678</span>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span>📍</span>
+                  <span className="text-navy">Lagos, Nigeria</span>
+                </div>
+              </div>
+
+              <div className="col-12 col-md-7">
+                {contactSuccess && <div className="alert alert-success py-2 small">{contactSuccess}</div>}
+                {contactError && <div className="alert alert-danger py-2 small">{contactError}</div>}
+
+                <form onSubmit={handleContactSubmit}>
                   <div className="mb-3">
                     <label className="small fw-semibold mb-1 d-block">Your Name</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={storyForm.submitted_by}
-                      onChange={(e) => setStoryForm({ ...storyForm, submitted_by: e.target.value })}
-                      disabled={submittingStory}
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      disabled={submittingContact}
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label className="small fw-semibold mb-1 d-block">Programme</label>
+                    <label className="small fw-semibold mb-1 d-block">Your Email</label>
                     <input
-                      type="text"
+                      type="email"
                       className="form-control"
-                      placeholder="e.g. Internship Placement"
-                      value={storyForm.programme}
-                      onChange={(e) => setStoryForm({ ...storyForm, programme: e.target.value })}
-                      disabled={submittingStory}
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      disabled={submittingContact}
                       required
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="small fw-semibold mb-1 d-block">Your Story</label>
-                    <textarea
+                    <label className="small fw-semibold mb-1 d-block">Subject</label>
+                    <input
+                      type="text"
                       className="form-control"
-                      rows={4}
-                      value={storyForm.content}
-                      onChange={(e) => setStoryForm({ ...storyForm, content: e.target.value })}
-                      disabled={submittingStory}
+                      value={contactForm.subject}
+                      onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                      disabled={submittingContact}
                       required
                     />
                   </div>
-                  <button type="submit" className="btn btn-navy w-100" disabled={submittingStory}>
-                    {submittingStory ? "Submitting..." : "Submit Your Story"}
+                  <div className="mb-4">
+                    <label className="small fw-semibold mb-1 d-block">Message</label>
+                    <textarea
+                      className="form-control"
+                      rows={4}
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      disabled={submittingContact}
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-navy px-4" disabled={submittingContact}>
+                    {submittingContact ? "Sending..." : "Send Message"}
                   </button>
                 </form>
-              </>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        </section>
+
+        {/* Footer */}
+        <footer className="py-4" style={{ backgroundColor: "rgba(10, 31, 68, 0.97)" }}>
+          <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-white-50 small">
+            <div>© 2026 The Clarridge</div>
+            <div>hello@theclarridge.org · Lagos, Nigeria</div>
+          </div>
+        </footer>
+
+        {/* Programme details modal */}
+        {selectedProgramme && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+            style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
+            onClick={() => setSelectedProgramme(null)}
+          >
+            <div
+              className="bg-white rounded overflow-hidden"
+              style={{ maxWidth: "480px", width: "90%", maxHeight: "85vh", overflowY: "auto" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {selectedProgramme.cover_image && (
+                <img
+                  src={selectedProgramme.cover_image}
+                  alt={selectedProgramme.name}
+                  style={{ width: "100%", height: "180px", objectFit: "cover" }}
+                />
+              )}
+              <div className="p-4">
+                <div className="d-flex justify-content-between align-items-start mb-3">
+                  <span
+                    className="badge rounded-pill fw-semibold px-3 py-2 text-uppercase"
+                    style={{ ...statusPillStyle(selectedProgramme.status), fontSize: "0.7rem", border: "1px solid" }}
+                  >
+                    ● {statusLabel(selectedProgramme.status)}
+                  </span>
+                  <button type="button" className="btn-close" onClick={() => setSelectedProgramme(null)} />
+                </div>
+
+                <h4 className="text-navy fw-bold mb-3">{selectedProgramme.name}</h4>
+
+                {selectedProgramme.description && (
+                  <p className="text-muted mb-3">{selectedProgramme.description}</p>
+                )}
+
+                {(selectedProgramme.start_date || selectedProgramme.end_date) && (
+                  <p className="small text-muted mb-4">
+                    {selectedProgramme.start_date || "—"} → {selectedProgramme.end_date || "—"}
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  className="btn w-100 fw-bold py-2"
+                  style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
+                  onClick={() => navigate("/apply")}
+                >
+                  Apply Now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Collegium member details modal */}
+        {selectedMember && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+            style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
+            onClick={() => setSelectedMember(null)}
+          >
+            <div
+              className="bg-white rounded p-4 text-center"
+              style={{ maxWidth: "360px", width: "90%" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="d-flex justify-content-end mb-2">
+                <button type="button" className="btn-close" onClick={() => setSelectedMember(null)} />
+              </div>
+
+              {selectedMember.photo ? (
+                <img
+                  src={selectedMember.photo}
+                  alt={selectedMember.member_name}
+                  style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover" }}
+                  className="mb-3"
+                />
+              ) : (
+                <div
+                  className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
+                  style={{ width: "96px", height: "96px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold", fontSize: "1.5rem" }}
+                >
+                  {initials(selectedMember.member_name)}
+                </div>
+              )}
+
+              <h5 className="text-navy fw-bold mb-1">{selectedMember.member_name}</h5>
+              <p className="text-muted mb-2">{selectedMember.school}, {selectedMember.field}</p>
+              <div className="small fw-semibold" style={{ color: "var(--clarridge-gold)" }}>
+                Member, The Collegium
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Team member details modal */}
+        {selectedTeamMember && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+            style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
+            onClick={() => setSelectedTeamMember(null)}
+          >
+            <div
+              className="bg-white rounded p-4 text-center"
+              style={{ maxWidth: "360px", width: "90%" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="d-flex justify-content-end mb-2">
+                <button type="button" className="btn-close" onClick={() => setSelectedTeamMember(null)} />
+              </div>
+              {selectedTeamMember.passport_photo ? (
+                <img
+                  src={selectedTeamMember.passport_photo}
+                  alt={`${selectedTeamMember.first_name} ${selectedTeamMember.last_name}`}
+                  style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover" }}
+                  className="mb-3"
+                />
+              ) : (
+                <div
+                  className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
+                  style={{ width: "96px", height: "96px", backgroundColor: "var(--clarridge-navy)", color: "var(--clarridge-gold)", fontWeight: "bold", fontSize: "1.5rem" }}
+                >
+                  {`${selectedTeamMember.first_name?.[0] || ""}${selectedTeamMember.last_name?.[0] || ""}`.toUpperCase()}
+                </div>
+              )}
+              <h5 className="text-navy fw-bold mb-1">{selectedTeamMember.first_name} {selectedTeamMember.last_name}</h5>
+              <p className="text-muted mb-0">{selectedTeamMember.email}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Share Your Story modal */}
+        {showShareStoryModal && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+            style={{ backgroundColor: "rgba(6, 21, 48, 0.6)", zIndex: 1070 }}
+            onClick={closeShareStoryModal}
+          >
+            <div
+              className="bg-white rounded p-4"
+              style={{ maxWidth: "440px", width: "90%" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h5 className="text-navy fw-bold mb-0">Share Your Story</h5>
+                <button type="button" className="btn-close" onClick={closeShareStoryModal} disabled={submittingStory} />
+              </div>
+
+              {storySuccess ? (
+                <div className="alert alert-success">{storySuccess}</div>
+              ) : (
+                <>
+                  {storyError && <div className="alert alert-danger py-2 small">{storyError}</div>}
+                  <p className="small text-muted mb-3">
+                    Your story will be reviewed by our team before it's published.
+                  </p>
+                  <form onSubmit={handleStorySubmit}>
+                    <div className="mb-3">
+                      <label className="small fw-semibold mb-1 d-block">Your Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={storyForm.submitted_by}
+                        onChange={(e) => setStoryForm({ ...storyForm, submitted_by: e.target.value })}
+                        disabled={submittingStory}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="small fw-semibold mb-1 d-block">Programme</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="e.g. Internship Placement"
+                        value={storyForm.programme}
+                        onChange={(e) => setStoryForm({ ...storyForm, programme: e.target.value })}
+                        disabled={submittingStory}
+                        required
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="small fw-semibold mb-1 d-block">Your Story</label>
+                      <textarea
+                        className="form-control"
+                        rows={4}
+                        value={storyForm.content}
+                        onChange={(e) => setStoryForm({ ...storyForm, content: e.target.value })}
+                        disabled={submittingStory}
+                        required
+                      />
+                    </div>
+                    <button type="submit" className="btn btn-navy w-100" disabled={submittingStory}>
+                      {submittingStory ? "Submitting..." : "Submit Your Story"}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
