@@ -583,7 +583,14 @@ function Home() {
                           </div>
                         )}
                         <div className="fw-bold text-navy">{m.first_name} {m.last_name}</div>
+                        {m.office && <div className="small text-muted">{m.office}</div>}
                         <div className="small text-muted">{m.email}</div>
+                        {m.phone_number && <div className="small text-muted">{m.phone_number}</div>}
+                        {m.bio && (
+                          <p className="small text-muted mt-2 mb-0" style={{ fontStyle: "italic" }}>
+                            {m.bio.length > 80 ? `${m.bio.slice(0, 80)}...` : m.bio}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -695,6 +702,11 @@ function Home() {
                         )}
                         <div className="fw-bold text-navy">{m.member_name}</div>
                         <div className="small text-muted">{m.school}, {m.field}</div>
+                        {m.bio && (
+                          <p className="small text-muted mt-2 mb-0" style={{ fontStyle: "italic" }}>
+                            {m.bio.length > 80 ? `${m.bio.slice(0, 80)}...` : m.bio}
+                          </p>
+                        )}
                         <div className="small fw-semibold mt-2" style={{ color: "var(--clarridge-gold)" }}>
                           Member, The Collegium
                         </div>
@@ -977,6 +989,9 @@ function Home() {
 
               <h5 className="text-navy fw-bold mb-1">{selectedMember.member_name}</h5>
               <p className="text-muted mb-2">{selectedMember.school}, {selectedMember.field}</p>
+              {selectedMember.bio && (
+                <p className="text-muted small mb-2" style={{ lineHeight: 1.6 }}>{selectedMember.bio}</p>
+              )}
               <div className="small fw-semibold" style={{ color: "var(--clarridge-gold)" }}>
                 Member, The Collegium
               </div>
@@ -1015,7 +1030,14 @@ function Home() {
                 </div>
               )}
               <h5 className="text-navy fw-bold mb-1">{selectedTeamMember.first_name} {selectedTeamMember.last_name}</h5>
-              <p className="text-muted mb-0">{selectedTeamMember.email}</p>
+              {selectedTeamMember.office && <p className="text-muted small mb-1">{selectedTeamMember.office}</p>}
+              <p className="text-muted small mb-1">{selectedTeamMember.email}</p>
+              {selectedTeamMember.phone_number && (
+                <p className="text-muted small mb-2">{selectedTeamMember.phone_number}</p>
+              )}
+              {selectedTeamMember.bio && (
+                <p className="text-muted small mb-0" style={{ lineHeight: 1.6 }}>{selectedTeamMember.bio}</p>
+              )}
             </div>
           </div>
         )}

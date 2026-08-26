@@ -17,6 +17,8 @@ function SettingsPage() {
     last_name: "",
     phone_number: "",
     date_of_birth: "",
+    office: "",
+    bio: "",
   });
   const [newPhoto, setNewPhoto] = useState(null);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -43,6 +45,8 @@ function SettingsPage() {
         last_name: res.data.last_name || "",
         phone_number: res.data.phone_number || "",
         date_of_birth: res.data.date_of_birth || "",
+        office: res.data.office || "",
+        bio: res.data.bio || "",
       });
     } catch {
       setProfileError("Unable to load your profile.");
@@ -66,6 +70,8 @@ function SettingsPage() {
       data.append("last_name", profileForm.last_name);
       data.append("phone_number", profileForm.phone_number);
       data.append("date_of_birth", profileForm.date_of_birth);
+      data.append("office", profileForm.office);
+      data.append("bio", profileForm.bio);
       if (newPhoto) data.append("passport_photo", newPhoto);
 
       const res = await updateMyProfile(data);
@@ -207,6 +213,18 @@ function SettingsPage() {
             <div className="text-muted" style={{ fontSize: "0.75rem" }}>Date of Birth</div>
             <div>{profile.date_of_birth}</div>
           </div>
+          {profile.office && (
+            <div className="py-2 border-bottom">
+              <div className="text-muted" style={{ fontSize: "0.75rem" }}>Office</div>
+              <div>{profile.office}</div>
+            </div>
+          )}
+          {profile.bio && (
+            <div className="py-2 border-bottom">
+              <div className="text-muted" style={{ fontSize: "0.75rem" }}>Bio</div>
+              <div>{profile.bio}</div>
+            </div>
+          )}
           <div style={rowStyle}>
             <div className="text-muted" style={{ fontSize: "0.75rem" }}>Status</div>
             <span className={`status-pill ${profile.is_active ? "status-approved" : "status-pending"}`}>
@@ -284,6 +302,29 @@ function SettingsPage() {
               onChange={(e) => setProfileForm({ ...profileForm, date_of_birth: e.target.value })}
               disabled={savingProfile}
               required
+            />
+          </div>
+
+          <div className="mb-2">
+            <label className="small text-muted d-block mb-1">Office</label>
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="e.g. Research & Publications"
+              value={profileForm.office}
+              onChange={(e) => setProfileForm({ ...profileForm, office: e.target.value })}
+              disabled={savingProfile}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="small text-muted d-block mb-1">Bio</label>
+            <textarea
+              className="form-control form-control-sm"
+              rows={3}
+              placeholder="A short bio about yourself..."
+              value={profileForm.bio}
+              onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+              disabled={savingProfile}
             />
           </div>
 

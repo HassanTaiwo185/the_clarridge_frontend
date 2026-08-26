@@ -5,6 +5,7 @@ import {
   updateCollegiumMember,
   deleteCollegiumMember,
 } from "../../api/collegium";
+import ImageDropzone from "../../components/ImageDropzone";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import ImagePreviewModal from "../../components/ImagePreviewModal";
 
@@ -16,7 +17,7 @@ function CollegiumManage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ member_name: "", school: "", field: "" });
+  const [form, setForm] = useState({ member_name: "", school: "", field: "", bio: "" });
   const [newPhotoFile, setNewPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -43,7 +44,7 @@ function CollegiumManage() {
   }, []);
 
   const resetForm = () => {
-    setForm({ member_name: "", school: "", field: "" });
+    setForm({ member_name: "", school: "", field: "", bio: "" });
     setNewPhotoFile(null);
     setPhotoPreview(null);
     setFormError("");
@@ -59,6 +60,7 @@ function CollegiumManage() {
       member_name: member.member_name,
       school: member.school,
       field: member.field,
+      bio: member.bio || "",
     });
     setNewPhotoFile(null);
     setPhotoPreview(null);
@@ -106,6 +108,7 @@ function CollegiumManage() {
       data.append("member_name", form.member_name);
       data.append("school", form.school);
       data.append("field", form.field);
+      data.append("bio", form.bio);
       if (newPhotoFile) data.append("photo", newPhotoFile);
 
       if (editingId === "new") {
@@ -181,7 +184,7 @@ function CollegiumManage() {
 
           {formError && <div className="alert alert-danger py-2 small">{formError}</div>}
 
-          <div className="d-flex flex-column flex-md-row gap-3 align-items-md-end">
+          <div className="d-flex flex-column flex-md-row gap-3 align-items-md-end mb-3">
             <div className="text-center">
               <label
                 htmlFor="photo-upload"
@@ -259,7 +262,21 @@ function CollegiumManage() {
             </div>
           </div>
 
-          <div className="d-flex gap-2 mt-4">
+          <div className="mb-4">
+            <label className="fw-semibold text-navy mb-2 d-block">
+              Bio <span className="text-muted fw-normal">(optional)</span>
+            </label>
+            <textarea
+              className="form-control"
+              rows={3}
+              placeholder="A short bio for this member..."
+              value={form.bio}
+              onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              disabled={saving}
+            />
+          </div>
+
+          <div className="d-flex gap-2">
             <button type="button" className="btn btn-navy" onClick={handleSaveClick} disabled={saving}>
               {saving ? "Saving..." : editingId === "new" ? "+ Add" : "Save Changes"}
             </button>
@@ -280,13 +297,14 @@ function CollegiumManage() {
         </div>
       ) : (
         <div className="glass-card bg-white p-0 overflow-hidden" style={{ overflowX: "auto" }}>
-          <table className="table table-row-hover mb-0" style={{ minWidth: "600px" }}>
+          <table className="table table-row-hover mb-0" style={{ minWidth: "700px" }}>
             <thead>
               <tr className="text-uppercase text-muted small">
                 <th className="ps-4">Photo</th>
                 <th>Name</th>
                 <th>School</th>
                 <th>Field</th>
+                <th>Bio</th>
                 <th className="text-end pe-4">Actions</th>
               </tr>
             </thead>
@@ -310,6 +328,9 @@ function CollegiumManage() {
                   <td className="fw-semibold">{m.member_name}</td>
                   <td className="text-muted small">{m.school}</td>
                   <td className="text-muted small">{m.field}</td>
+                  <td className="text-muted small" style={{ maxWidth: "200px" }}>
+                    {m.bio ? (m.bio.length > 50 ? `${m.bio.slice(0, 50)}...` : m.bio) : "—"}
+                  </td>
                   <td className="text-end pe-4">
                     <button
                       type="button"
