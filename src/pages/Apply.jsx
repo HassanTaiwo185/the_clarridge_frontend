@@ -573,7 +573,7 @@ function Apply() {
               </dd>
 
               <dt className="text-muted">
-                CV / Transcript
+                CV 
               </dt>
               <dd>
                 {cvTranscript?.name || "—"}
