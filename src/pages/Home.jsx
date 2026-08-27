@@ -140,19 +140,25 @@ function Home() {
     loadObservatory();
   }, []);
 
-  useEffect(() => {
-    const loadTeamMembers = async () => {
-      try {
-        const res = await api.get("/team/");
-        setTeamMembers(res.data);
-      } catch {
-        // silently fail
-      } finally {
-        setLoadingTeamMembers(false);
-      }
-    };
-    loadTeamMembers();
-  }, []);
+useEffect(() => {
+  const loadTeamMembers = async () => {
+    try {
+      const res =  await api.get("/team/");
+
+
+      console.log("TEAM DATA:", res.data);
+      console.log("FIRST PHOTO:", res.data[0]?.photo);
+
+      setTeamMembers(res.data);
+    } catch (error) {
+      console.error("Failed to load team members:", error);
+    } finally {
+      setLoadingTeamMembers(false);
+    }
+  };
+
+  loadTeamMembers();
+}, []);
 
   const loadTestimonials = async () => {
     try {

@@ -2,8 +2,7 @@ import api from "./axios";
 
 export const getTeamMembers = () => api.get("/team/");
 
-console.log("TEAM DATA:", res.data);
-console.log("FIRST PHOTO:", res.data[0]?.photo);
+
 
 export const createTeamMember = (formData) =>
   api.post("/team/", formData, {
