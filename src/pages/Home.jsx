@@ -506,8 +506,18 @@ function Home() {
                     {(showAllTestimonials ? testimonials : testimonials.slice(0, 5)).map((t) => (
                       <div className="col-12 col-md-6" key={t.id}>
                         <div className="bg-white p-4 h-100" style={{ border: "1px solid #e5e7eb", borderRadius: "6px" }}>
-                          <div className="fw-bold text-navy mb-1">{t.submitted_by}</div>
-                          <div className="small mb-3" style={{ color: "var(--clarridge-gold)" }}>{t.programme}</div>
+                          <div className="d-flex align-items-center gap-2 mb-2">
+                            <div
+                              className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                              style={{ width: "40px", height: "40px", backgroundColor: "var(--clarridge-navy)", color: "#fff", fontSize: "0.9rem", fontWeight: "bold" }}
+                            >
+                              {t.submitted_by?.[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="fw-bold text-navy">{t.submitted_by}</div>
+                              <div className="small" style={{ color: "var(--clarridge-gold)" }}>{t.programme}</div>
+                            </div>
+                          </div>
                           <p className="text-muted mb-0" style={{ lineHeight: 1.6 }}>{t.content}</p>
                         </div>
                       </div>
