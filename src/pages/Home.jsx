@@ -503,18 +503,12 @@ function Home() {
                   <p className="text-muted mb-4">No testimonials yet. Be the first to share yours!</p>
                 ) : (
                   <div className="row g-3 mb-4">
-                    {(showAllTestimonials ? testimonials : testimonials.slice(0, 3)).map((t) => (
-                      <div className="col-12 col-md-6 col-lg-3" key={t.id}>
+                    {(showAllTestimonials ? testimonials : testimonials.slice(0, 5)).map((t) => (
+                      <div className="col-12 col-md-6" key={t.id}>
                         <div className="bg-white p-4 h-100" style={{ border: "1px solid #e5e7eb", borderRadius: "6px" }}>
-                          <div style={{ fontSize: "1.5rem", color: "var(--clarridge-gold)" }}>&ldquo;</div>
-                          <p className="text-muted small mb-3" style={{ minHeight: "80px" }}>{t.content}</p>
-                          <div className="d-flex align-items-center gap-2 pt-2" style={{ borderTop: "1px solid #e5e7eb" }}>
-                            <div className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style={{ width: "32px", height: "32px", backgroundColor: "var(--clarridge-navy)", color: "#fff", fontSize: "0.8rem", fontWeight: "bold" }}>{t.submitted_by?.[0]?.toUpperCase()}</div>
-                            <div>
-                              <div className="small fw-bold text-navy">{t.submitted_by}</div>
-                              <div className="small text-muted">{t.programme}</div>
-                            </div>
-                          </div>
+                          <div className="fw-bold text-navy mb-1">{t.submitted_by}</div>
+                          <div className="small mb-3" style={{ color: "var(--clarridge-gold)" }}>{t.programme}</div>
+                          <p className="text-muted mb-0" style={{ lineHeight: 1.6 }}>{t.content}</p>
                         </div>
                       </div>
                     ))}
@@ -527,9 +521,9 @@ function Home() {
                   <span role="button" className="small fw-semibold" style={{ color: "var(--clarridge-gold)" }} onClick={openShareStoryModal}>Share Your Story →</span>
                 </div>
 
-                {testimonials.length > 3 && (
+                {testimonials.length > 5 && (
                   <div className="mt-3">
-                    <button type="button" className="btn btn-link text-navy fw-semibold text-decoration-none p-0" onClick={() => setShowAllTestimonials((prev) => !prev)}>{showAllTestimonials ? "Show Less ↑" : "View All Reviews →"}</button>
+                    <button type="button" className="btn btn-link text-navy fw-semibold text-decoration-none p-0" onClick={() => setShowAllTestimonials((prev) => !prev)}>{showAllTestimonials ? "Show Less ↑" : "View All Testimonies →"}</button>
                   </div>
                 )}
               </>
