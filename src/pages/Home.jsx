@@ -674,7 +674,6 @@ function Home() {
               ) : (
                 <>
                   {storyError && <div className="alert alert-danger py-2 small">{storyError}</div>}
-                  <p className="small text-muted mb-3">Your story will be reviewed by our team before it's published.</p>
                   <form onSubmit={handleStorySubmit}>
                     <div className="mb-3">
                       <label className="small fw-semibold mb-1 d-block">Your Name</label>
