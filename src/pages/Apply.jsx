@@ -464,9 +464,9 @@ function Apply() {
               />
             </div>
 
-            {/* CV / Transcript */}
+            
             <label className="fw-semibold small mb-1 d-block">
-              Upload CV / Transcript
+              Upload CV
             </label>
 
             <div
