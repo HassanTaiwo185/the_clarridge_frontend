@@ -19,7 +19,7 @@ function ColdStartLoader({ delayMs = 3000 }) {
       </div>
       <p className="text-muted small mb-0">
         {showColdStartMessage
-          ? "Waking up our servers — this can take up to a minute on first load. Thanks for your patience!"
+          ? "Loading...Please wait"
           : "Loading..."}
       </p>
     </div>
