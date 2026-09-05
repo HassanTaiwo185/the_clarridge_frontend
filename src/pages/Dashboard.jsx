@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axios";
-import StatCard from "../../components/StatCard";
+import api from "../api/axios";
+import StatCard from "../components/StatCard";
 
 function statusPillClass(status) {
   if (status === "approved") return "status-approved";
