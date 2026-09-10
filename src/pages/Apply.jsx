@@ -4,6 +4,8 @@ import PublicNavbar from "../components/PublicNavbar";
 import { submitApplication } from "../api/applications";
 
 const STEPS = ["Personal Info", "Documents", "Review"];
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 function Apply() {
   const navigate = useNavigate();
@@ -19,12 +21,61 @@ function Apply() {
     university: "",
     level: "",
     course_of_study: "",
-    cgpa: "",
   });
-
-  const [statementOfPurpose, setStatementOfPurpose] = useState(null);
   const [passportPhoto, setPassportPhoto] = useState(null);
   const [cvTranscript, setCvTranscript] = useState(null);
+  const [statementOfPurpose, setStatementOfPurpose] = useState(null);
+
+  const handlePassportPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError(
+        `Passport photo is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Please choose a photo under ${MAX_FILE_SIZE_MB}MB.`
+      );
+      e.target.value = "";
+      setPassportPhoto(null);
+      return;
+    }
+
+    setError("");
+    setPassportPhoto(file);
+  };
+
+  const handleCvTranscriptChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError(
+        `CV/Transcript is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Please upload a PDF under ${MAX_FILE_SIZE_MB}MB.`
+      );
+      e.target.value = "";
+      setCvTranscript(null);
+      return;
+    }
+
+    setError("");
+    setCvTranscript(file);
+  };
+
+  const handleStatementOfPurposeChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError(
+        `Statement of Purpose is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Please upload a PDF under ${MAX_FILE_SIZE_MB}MB.`
+      );
+      e.target.value = "";
+      setStatementOfPurpose(null);
+      return;
+    }
+
+    setError("");
+    setStatementOfPurpose(file);
+  };
 
   const validateStep = () => {
     if (currentStep === 0) {
@@ -35,30 +86,24 @@ function Apply() {
         !form.date_of_birth ||
         !form.university.trim() ||
         !form.level.trim() ||
-        !form.course_of_study.trim() ||
-        !form.cgpa.trim()
+        !form.course_of_study.trim()
       ) {
         setError("Please fill in all personal information fields.");
         return false;
       }
     }
-
     if (currentStep === 1) {
-      if (!statementOfPurpose || !passportPhoto || !cvTranscript) {
-        setError(
-          "Please upload your Statement of Purpose, passport photo, and CV/transcript."
-        );
+      if (!passportPhoto || !cvTranscript || !statementOfPurpose) {
+        setError("Please upload your passport photo, CV/transcript, and statement of purpose.");
         return false;
       }
     }
-
     setError("");
     return true;
   };
 
   const handleNext = () => {
     if (!validateStep()) return;
-
     setCurrentStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
 
@@ -70,10 +115,8 @@ function Apply() {
   const handleSubmit = async () => {
     setSubmitting(true);
     setError("");
-
     try {
       const data = new FormData();
-
       data.append("full_name", form.full_name);
       data.append("email", form.email);
       data.append("phone_number", form.phone_number);
@@ -81,8 +124,6 @@ function Apply() {
       data.append("university", form.university);
       data.append("level", form.level);
       data.append("course_of_study", form.course_of_study);
-      data.append("cgpa", form.cgpa);
-
       data.append("statement_of_purpose", statementOfPurpose);
       data.append("passport_photo", passportPhoto);
       data.append("cv_transcript", cvTranscript);
@@ -91,23 +132,15 @@ function Apply() {
 
       navigate("/apply/confirmation", {
         state: {
-          referenceNumber: `CA-${new Date().getFullYear()}-${String(
-            res.data.id
-          ).padStart(4, "0")}`,
+          referenceNumber: `CA-${new Date().getFullYear()}-${String(res.data.id).padStart(4, "0")}`,
           fullName: form.full_name,
         },
       });
     } catch (err) {
       const backendData = err.response?.data;
-
       if (backendData) {
         const firstError = Object.values(backendData)[0];
-
-        setError(
-          Array.isArray(firstError)
-            ? firstError[0]
-            : String(firstError)
-        );
+        setError(Array.isArray(firstError) ? firstError[0] : String(firstError));
       } else {
         setError("Unable to submit your application. Please try again.");
       }
@@ -120,492 +153,232 @@ function Apply() {
     <div>
       <PublicNavbar />
 
-      {/* Header */}
-      <div
-        style={{ backgroundColor: "var(--clarridge-navy)" }}
-        className="text-white py-4"
-      >
+      <div style={{ backgroundColor: "var(--clarridge-navy)" }} className="text-white py-4">
         <div className="container">
-          <div
-            className="small text-uppercase fw-semibold mb-1"
-            style={{
-              color: "var(--clarridge-gold)",
-              letterSpacing: "1px",
-            }}
-          >
+          <div className="small text-uppercase fw-semibold mb-1" style={{ color: "var(--clarridge-gold)", letterSpacing: "1px" }}>
             Apply
           </div>
-
-          <h1
-            className="fw-normal mb-0"
-            style={{ fontSize: "1.5rem" }}
-          >
+          <h1 className="fw-normal mb-0" style={{ fontSize: "1.5rem" }}>
             Application Flow — Step {currentStep + 1} of {STEPS.length}
           </h1>
         </div>
       </div>
 
-      <div
-        className="container py-5"
-        style={{ maxWidth: "700px" }}
-      >
-        {/* Steps */}
+      <div className="container py-5" style={{ maxWidth: "700px" }}>
         <div className="d-flex justify-content-between mb-5">
           {STEPS.map((label, idx) => (
-            <div
-              key={label}
-              className="text-center flex-fill"
-            >
+            <div key={label} className="text-center flex-fill">
               <div
                 className="mx-auto mb-2 d-flex align-items-center justify-content-center rounded-circle fw-bold"
                 style={{
                   width: "36px",
                   height: "36px",
-                  backgroundColor:
-                    idx <= currentStep
-                      ? "var(--clarridge-navy)"
-                      : "#e5e7eb",
-                  color:
-                    idx <= currentStep
-                      ? "#fff"
-                      : "#6c757d",
+                  backgroundColor: idx <= currentStep ? "var(--clarridge-navy)" : "#e5e7eb",
+                  color: idx <= currentStep ? "#fff" : "#6c757d",
                 }}
               >
                 {idx + 1}
               </div>
-
-              <div
-                className={`small ${
-                  idx === currentStep
-                    ? "text-navy fw-semibold"
-                    : "text-muted"
-                }`}
-              >
+              <div className={`small ${idx === currentStep ? "text-navy fw-semibold" : "text-muted"}`}>
                 {label}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="alert alert-danger">
-            {error}
-          </div>
-        )}
+        {error && <div className="alert alert-danger">{error}</div>}
 
-        {/* STEP 1 */}
         {currentStep === 0 && (
           <div>
-            <h4 className="text-navy fw-normal mb-4">
-              Personal Information
-            </h4>
-
-            {/* Name / Email */}
+            <h4 className="text-navy fw-normal mb-4">Personal Information</h4>
             <div className="row g-3 mb-3">
               <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Full Name
-                </label>
-
+                <label className="fw-semibold small mb-1 d-block">Full Name</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter your full name"
                   value={form.full_name}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      full_name: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                 />
               </div>
-
               <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Email Address
-                </label>
-
+                <label className="fw-semibold small mb-1 d-block">Email Address</label>
                 <input
                   type="email"
                   className="form-control"
                   placeholder="Enter your email address"
                   value={form.email}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      email: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
             </div>
-
-            {/* Phone / DOB */}
             <div className="row g-3 mb-3">
               <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Phone Number
-                </label>
-
+                <label className="fw-semibold small mb-1 d-block">Phone Number</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter your phone number"
                   value={form.phone_number}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      phone_number: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                 />
               </div>
-
               <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Date of Birth
-                </label>
-
+                <label className="fw-semibold small mb-1 d-block">Date of Birth</label>
                 <input
                   type="date"
                   className="form-control"
                   value={form.date_of_birth}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      date_of_birth: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
                 />
               </div>
             </div>
-
-            {/* University / Level */}
             <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  University
-                </label>
-
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">University</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter your university"
                   value={form.university}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      university: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, university: e.target.value })}
                 />
               </div>
-
-              <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Level
-                </label>
-
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">Level</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="e.g. 300 Level"
                   value={form.level}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      level: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, level: e.target.value })}
                 />
               </div>
-            </div>
-
-            {/* Course / CGPA */}
-            <div className="row g-3 mb-3">
-              <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  Course of Study
-                </label>
-
+              <div className="col-md-4">
+                <label className="fw-semibold small mb-1 d-block">Course of Study</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="e.g. Law"
                   value={form.course_of_study}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      course_of_study: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div className="col-md-6">
-                <label className="fw-semibold small mb-1 d-block">
-                  CGPA
-                </label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="e.g. 4.25"
-                  value={form.cgpa}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      cgpa: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, course_of_study: e.target.value })}
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* STEP 2 */}
         {currentStep === 1 && (
           <div>
-            <h4 className="text-navy fw-normal mb-4">
-              Documents
-            </h4>
+            <h4 className="text-navy fw-normal mb-4">Documents</h4>
 
-            {/* Statement of Purpose */}
-            <label className="fw-semibold small mb-1 d-block">
-              Statement of Purpose
-            </label>
-
-            <div
-              className="border rounded p-3 d-flex justify-content-between align-items-center mb-4"
-              style={{
-                backgroundColor: "#f8f9fb",
-                cursor: "pointer",
-              }}
-              onClick={() =>
-                document
-                  .getElementById("sop-input")
-                  .click()
-              }
-            >
-              <span className="small">
-                {statementOfPurpose
-                  ? statementOfPurpose.name
-                  : "Click to upload PDF"}
-              </span>
-
-              {statementOfPurpose && (
-                <span className="small text-success fw-semibold">
-                  Uploaded ✓
-                </span>
-              )}
-
-              <input
-                id="sop-input"
-                type="file"
-                accept="application/pdf"
-                className="d-none"
-                onChange={(e) =>
-                  setStatementOfPurpose(
-                    e.target.files[0]
-                  )
-                }
-              />
-            </div>
-
-            {/* Passport */}
-            <label className="fw-semibold small mb-1 d-block">
-              Upload Passport Photograph
-            </label>
-
+            <label className="fw-semibold small mb-1 d-block">Upload Passport Photograph</label>
             <div
               className="border rounded p-4 text-center mb-4"
-              style={{
-                borderStyle: "dashed",
-                backgroundColor: "#f8f9fb",
-                cursor: "pointer",
-              }}
-              onClick={() =>
-                document
-                  .getElementById("passport-input")
-                  .click()
-              }
+              style={{ borderStyle: "dashed", backgroundColor: "#f8f9fb", cursor: "pointer" }}
+              onClick={() => document.getElementById("passport-input").click()}
             >
-              <div style={{ fontSize: "1.5rem" }}>
-                ↑
-              </div>
-
-              <p className="mb-1 fw-semibold">
-                Click to upload or drag and drop
-              </p>
-
-              <p className="small text-muted mb-0">
-                JPG, PNG up to 5MB
-              </p>
-
+              <div style={{ fontSize: "1.5rem" }}>↑</div>
+              <p className="mb-1 fw-semibold">Click to upload or drag and drop</p>
+              <p className="small text-muted mb-0">JPG, PNG up to {MAX_FILE_SIZE_MB}MB</p>
               {passportPhoto && (
                 <p className="small text-success mt-2 mb-0">
-                  {passportPhoto.name} selected
+                  {passportPhoto.name} selected ({(passportPhoto.size / 1024 / 1024).toFixed(1)}MB)
                 </p>
               )}
-
               <input
                 id="passport-input"
                 type="file"
                 accept="image/jpeg,image/png"
                 className="d-none"
-                onChange={(e) =>
-                  setPassportPhoto(
-                    e.target.files[0]
-                  )
-                }
+                onChange={handlePassportPhotoChange}
               />
             </div>
 
-            
-            <label className="fw-semibold small mb-1 d-block">
-              Upload CV
-            </label>
-
+            <label className="fw-semibold small mb-1 d-block">Upload CV / Transcript</label>
             <div
-              className="border rounded p-3 d-flex justify-content-between align-items-center"
-              style={{
-                backgroundColor: "#f8f9fb",
-                cursor: "pointer",
-              }}
-              onClick={() =>
-                document
-                  .getElementById("cv-input")
-                  .click()
-              }
+              className="border rounded p-3 d-flex justify-content-between align-items-center mb-4"
+              style={{ backgroundColor: "#f8f9fb", cursor: "pointer" }}
+              onClick={() => document.getElementById("cv-input").click()}
             >
               <span className="small">
                 {cvTranscript
-                  ? cvTranscript.name
-                  : "Click to upload PDF"}
+                  ? `${cvTranscript.name} (${(cvTranscript.size / 1024 / 1024).toFixed(1)}MB)`
+                  : `Click to upload PDF (up to ${MAX_FILE_SIZE_MB}MB)`}
               </span>
-
-              {cvTranscript && (
-                <span className="small text-success fw-semibold">
-                  Uploaded ✓
-                </span>
-              )}
-
+              {cvTranscript && <span className="small text-success fw-semibold">Uploaded ✓</span>}
               <input
                 id="cv-input"
                 type="file"
                 accept="application/pdf"
                 className="d-none"
-                onChange={(e) =>
-                  setCvTranscript(
-                    e.target.files[0]
-                  )
-                }
+                onChange={handleCvTranscriptChange}
+              />
+            </div>
+
+            <label className="fw-semibold small mb-1 d-block">Upload Statement of Purpose</label>
+            <div
+              className="border rounded p-3 d-flex justify-content-between align-items-center"
+              style={{ backgroundColor: "#f8f9fb", cursor: "pointer" }}
+              onClick={() => document.getElementById("sop-input").click()}
+            >
+              <span className="small">
+                {statementOfPurpose
+                  ? `${statementOfPurpose.name} (${(statementOfPurpose.size / 1024 / 1024).toFixed(1)}MB)`
+                  : `Click to upload PDF (up to ${MAX_FILE_SIZE_MB}MB)`}
+              </span>
+              {statementOfPurpose && <span className="small text-success fw-semibold">Uploaded ✓</span>}
+              <input
+                id="sop-input"
+                type="file"
+                accept="application/pdf"
+                className="d-none"
+                onChange={handleStatementOfPurposeChange}
               />
             </div>
           </div>
         )}
 
-        {/* STEP 3 */}
         {currentStep === 2 && (
           <div>
-            <h4 className="text-navy fw-normal mb-4">
-              Review Your Application
-            </h4>
-
+            <h4 className="text-navy fw-normal mb-4">Review Your Application</h4>
             <dl className="small">
-              <dt className="text-muted">
-                Full Name
-              </dt>
-              <dd className="fw-semibold">
-                {form.full_name}
-              </dd>
-
-              <dt className="text-muted">
-                Email
-              </dt>
+              <dt className="text-muted">Full Name</dt>
+              <dd className="fw-semibold">{form.full_name}</dd>
+              <dt className="text-muted">Email</dt>
               <dd>{form.email}</dd>
-
-              <dt className="text-muted">
-                Phone
-              </dt>
+              <dt className="text-muted">Phone</dt>
               <dd>{form.phone_number}</dd>
-
-              <dt className="text-muted">
-                Date of Birth
-              </dt>
+              <dt className="text-muted">Date of Birth</dt>
               <dd>{form.date_of_birth}</dd>
-
-              <dt className="text-muted">
-                University
-              </dt>
+              <dt className="text-muted">University</dt>
               <dd>{form.university}</dd>
-
-              <dt className="text-muted">
-                Level
-              </dt>
+              <dt className="text-muted">Level</dt>
               <dd>{form.level}</dd>
-
-              <dt className="text-muted">
-                Course of Study
-              </dt>
+              <dt className="text-muted">Course of Study</dt>
               <dd>{form.course_of_study}</dd>
-
-              <dt className="text-muted">
-                CGPA
-              </dt>
-              <dd>{form.cgpa}</dd>
-
-              <dt className="text-muted">
-                Statement of Purpose
-              </dt>
-              <dd>
-                {statementOfPurpose?.name || "—"}
-              </dd>
-
-              <dt className="text-muted">
-                Passport Photo
-              </dt>
-              <dd>
-                {passportPhoto?.name || "—"}
-              </dd>
-
-              <dt className="text-muted">
-                CV 
-              </dt>
-              <dd>
-                {cvTranscript?.name || "—"}
-              </dd>
+              <dt className="text-muted">Statement of Purpose</dt>
+              <dd>{statementOfPurpose?.name}</dd>
+              <dt className="text-muted">Passport Photo</dt>
+              <dd>{passportPhoto?.name}</dd>
+              <dt className="text-muted">CV / Transcript</dt>
+              <dd>{cvTranscript?.name}</dd>
             </dl>
           </div>
         )}
 
-        {/* Navigation */}
         <div className="d-flex gap-2 mt-5">
           {currentStep > 0 && (
-            <button
-              type="button"
-              className="btn btn-outline-secondary px-4"
-              onClick={handleBack}
-              disabled={submitting}
-            >
+            <button type="button" className="btn btn-outline-secondary px-4" onClick={handleBack} disabled={submitting}>
               Back
             </button>
           )}
-
           {currentStep < STEPS.length - 1 ? (
             <button
               type="button"
               className="btn fw-bold px-4"
-              style={{
-                backgroundColor:
-                  "var(--clarridge-gold)",
-                borderColor:
-                  "var(--clarridge-gold)",
-                color: "#fff",
-              }}
+              style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
               onClick={handleNext}
             >
               Save &amp; Continue
@@ -614,19 +387,11 @@ function Apply() {
             <button
               type="button"
               className="btn fw-bold px-4"
-              style={{
-                backgroundColor:
-                  "var(--clarridge-gold)",
-                borderColor:
-                  "var(--clarridge-gold)",
-                color: "#fff",
-              }}
+              style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
               onClick={handleSubmit}
               disabled={submitting}
             >
-              {submitting
-                ? "Submitting..."
-                : "Submit Application"}
+              {submitting ? "Submitting..." : "Submit Application"}
             </button>
           )}
         </div>
