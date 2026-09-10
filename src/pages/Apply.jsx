@@ -20,6 +20,7 @@ function Apply() {
     date_of_birth: "",
     university: "",
     level: "",
+    cgpa: "",
     course_of_study: "",
   });
   const [passportPhoto, setPassportPhoto] = useState(null);
@@ -86,6 +87,7 @@ function Apply() {
         !form.date_of_birth ||
         !form.university.trim() ||
         !form.level.trim() ||
+        !form.cgpa.trim() ||
         !form.course_of_study.trim()
       ) {
         setError("Please fill in all personal information fields.");
@@ -123,6 +125,7 @@ function Apply() {
       data.append("date_of_birth", form.date_of_birth);
       data.append("university", form.university);
       data.append("level", form.level);
+      data.append("cgpa", form.cgpa);
       data.append("course_of_study", form.course_of_study);
       data.append("statement_of_purpose", statementOfPurpose);
       data.append("passport_photo", passportPhoto);
@@ -235,7 +238,7 @@ function Apply() {
               </div>
             </div>
             <div className="row g-3 mb-3">
-              <div className="col-md-4">
+              <div className="col-md-6">
                 <label className="fw-semibold small mb-1 d-block">University</label>
                 <input
                   type="text"
@@ -245,7 +248,19 @@ function Apply() {
                   onChange={(e) => setForm({ ...form, university: e.target.value })}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-6">
+                <label className="fw-semibold small mb-1 d-block">Course of Study</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. Law"
+                  value={form.course_of_study}
+                  onChange={(e) => setForm({ ...form, course_of_study: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="row g-3 mb-3">
+              <div className="col-md-6">
                 <label className="fw-semibold small mb-1 d-block">Level</label>
                 <input
                   type="text"
@@ -255,14 +270,14 @@ function Apply() {
                   onChange={(e) => setForm({ ...form, level: e.target.value })}
                 />
               </div>
-              <div className="col-md-4">
-                <label className="fw-semibold small mb-1 d-block">Course of Study</label>
+              <div className="col-md-6">
+                <label className="fw-semibold small mb-1 d-block">CGPA</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="e.g. Law"
-                  value={form.course_of_study}
-                  onChange={(e) => setForm({ ...form, course_of_study: e.target.value })}
+                  placeholder="e.g. 4.50"
+                  value={form.cgpa}
+                  onChange={(e) => setForm({ ...form, cgpa: e.target.value })}
                 />
               </div>
             </div>
@@ -354,10 +369,12 @@ function Apply() {
               <dd>{form.date_of_birth}</dd>
               <dt className="text-muted">University</dt>
               <dd>{form.university}</dd>
-              <dt className="text-muted">Level</dt>
-              <dd>{form.level}</dd>
               <dt className="text-muted">Course of Study</dt>
               <dd>{form.course_of_study}</dd>
+              <dt className="text-muted">Level</dt>
+              <dd>{form.level}</dd>
+              <dt className="text-muted">CGPA</dt>
+              <dd>{form.cgpa}</dd>
               <dt className="text-muted">Statement of Purpose</dt>
               <dd>{statementOfPurpose?.name}</dd>
               <dt className="text-muted">Passport Photo</dt>
