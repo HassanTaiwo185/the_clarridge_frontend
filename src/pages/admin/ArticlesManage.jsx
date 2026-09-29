@@ -21,6 +21,8 @@ function ArticlesManage() {
     date_written: "",
   });
   const [pdfFile, setPdfFile] = useState(null);
+  const [coverImageFile, setCoverImageFile] = useState(null);
+  const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
@@ -55,6 +57,8 @@ function ArticlesManage() {
       date_written: "",
     });
     setPdfFile(null);
+    setCoverImageFile(null);
+    setCoverImagePreview(null);
     setFormError("");
   };
 
@@ -73,6 +77,8 @@ function ArticlesManage() {
       date_written: article.date_written,
     });
     setPdfFile(null);
+    setCoverImageFile(null);
+    setCoverImagePreview(null);
     setFormError("");
     setEditingSlug(article.slug);
   };
@@ -80,6 +86,12 @@ function ArticlesManage() {
   const closeForm = () => {
     setEditingSlug(null);
     resetForm();
+  };
+
+  const handleCoverImageSelect = (file) => {
+    if (!file) return;
+    setCoverImageFile(file);
+    setCoverImagePreview(URL.createObjectURL(file));
   };
 
   const handleSaveClick = () => {
@@ -119,6 +131,7 @@ function ArticlesManage() {
       data.append("summary", form.summary);
       data.append("date_written", form.date_written);
       if (pdfFile) data.append("pdf_file", pdfFile);
+      if (coverImageFile) data.append("cover_image", coverImageFile);
 
       if (editingSlug === "new") {
         await createArticle(data);
@@ -178,6 +191,48 @@ function ArticlesManage() {
           </h6>
 
           {formError && <div className="alert alert-danger py-2 small">{formError}</div>}
+
+          <div className="mb-3">
+            <label className="fw-semibold text-navy mb-2 d-block">
+              Cover Image <span className="text-muted fw-normal">(optional)</span>
+            </label>
+            <div className="d-flex align-items-center gap-3">
+              <label
+                htmlFor="article-cover-upload"
+                className="d-flex align-items-center justify-content-center bg-light text-muted small"
+                style={{
+                  width: "100px",
+                  height: "70px",
+                  cursor: "pointer",
+                  overflow: "hidden",
+                  border: "2px dashed #ccc",
+                  borderRadius: "6px",
+                  flexShrink: 0,
+                }}
+              >
+                {coverImagePreview ? (
+                  <img src={coverImagePreview} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : editingSlug !== "new" && articles.find((a) => a.slug === editingSlug)?.cover_image ? (
+                  <img
+                    src={articles.find((a) => a.slug === editingSlug)?.cover_image}
+                    alt="Current"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <span className="text-center px-1" style={{ fontSize: "0.65rem" }}>No image</span>
+                )}
+              </label>
+              <input
+                id="article-cover-upload"
+                type="file"
+                accept="image/*"
+                className="d-none"
+                onChange={(e) => handleCoverImageSelect(e.target.files[0])}
+                disabled={saving}
+              />
+              <span className="small text-muted">Click the box to choose an image</span>
+            </div>
+          </div>
 
           <div className="row g-3 mb-3">
             <div className="col-md-6">
@@ -292,6 +347,22 @@ function ArticlesManage() {
           {articles.map((a) => (
             <div className="col-12 col-md-6 col-lg-4" key={a.id}>
               <div className="glass-card bg-white p-4 h-100 d-flex flex-column">
+                {a.cover_image ? (
+                  <img
+                    src={a.cover_image}
+                    alt={a.title}
+                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "6px" }}
+                    className="mb-3"
+                  />
+                ) : (
+                  <div
+                    className="d-flex align-items-center justify-content-center bg-light text-muted mb-3"
+                    style={{ width: "100%", height: "140px", borderRadius: "6px", fontSize: "1.5rem" }}
+                  >
+                    🖼️
+                  </div>
+                )}
+
                 <h6 className="fw-bold text-navy mb-2">{a.title}</h6>
 
                 <div className="small text-muted mb-2">
@@ -317,20 +388,6 @@ function ArticlesManage() {
                     onClick={() => window.open(a.pdf_file, "_blank", "noopener,noreferrer")}
                   >
                     View PDF
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-secondary flex-grow-1"
-                    onClick={() => {
-                      const link = document.createElement("a");
-                      link.href = a.pdf_file;
-                      link.download = a.title || "article.pdf";
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }}
-                  >
-                    Download
                   </button>
                 </div>
 

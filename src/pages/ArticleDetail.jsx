@@ -50,14 +50,23 @@ function ArticleDetail() {
           <div className="alert alert-danger">{error}</div>
         ) : (
           <>
-<button
-  type="button"
-  className="btn fw-bold mb-4 ms-2"
-  style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
-  onClick={handleOpenPdf}
->
-  Open PDF in Browser
-</button>
+            {article.cover_image && (
+              <img
+                src={article.cover_image}
+                alt={article.title}
+                style={{ width: "100%", height: "280px", objectFit: "cover", borderRadius: "6px" }}
+                className="mb-4"
+              />
+            )}
+
+            <button
+              type="button"
+              className="btn fw-bold mb-4"
+              style={{ backgroundColor: "var(--clarridge-gold)", borderColor: "var(--clarridge-gold)", color: "#fff" }}
+              onClick={handleOpenPdf}
+            >
+              Open PDF in Browser
+            </button>
 
             <h1 className="text-navy fw-normal mb-3" style={{ fontSize: "1.85rem", lineHeight: 1.35 }}>
               {article.title}

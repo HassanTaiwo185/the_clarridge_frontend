@@ -49,7 +49,7 @@ function Articles() {
             {articles.map((a) => (
               <div
                 key={a.id}
-                className="py-4 px-3"
+                className="py-4 px-3 d-flex gap-3"
                 role="button"
                 onClick={() => navigate(`/articles/${a.slug}`)}
                 style={{
@@ -70,27 +70,44 @@ function Articles() {
                   e.currentTarget.style.borderColor = "#e5e7eb";
                 }}
               >
-                <h5 className="text-navy fw-bold mb-2">{a.title}</h5>
-
-                {a.page_count && (
-                  <p className="small text-muted mb-1">{a.page_count} Pages</p>
+                {a.cover_image ? (
+                  <img
+                    src={a.cover_image}
+                    alt={a.title}
+                    style={{ width: "100px", height: "80px", objectFit: "cover", borderRadius: "6px", flexShrink: 0 }}
+                  />
+                ) : (
+                  <div
+                    className="d-flex align-items-center justify-content-center bg-light text-muted"
+                    style={{ width: "100px", height: "80px", borderRadius: "6px", flexShrink: 0, fontSize: "1.5rem" }}
+                  >
+                    🖼️
+                  </div>
                 )}
 
-                <p className="small text-muted mb-1">
-                  Posted: {new Date(a.date_posted).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
-                </p>
+                <div className="flex-grow-1">
+                  <h5 className="text-navy fw-bold mb-2">{a.title}</h5>
 
-                <p className="small fw-semibold mb-1">{a.author_name}</p>
+                  {a.page_count && (
+                    <p className="small text-muted mb-1">{a.page_count} Pages</p>
+                  )}
 
-                {a.institution && (
-                  <p className="small text-muted mb-1">{a.institution}</p>
-                )}
+                  <p className="small text-muted mb-1">
+                    Posted: {new Date(a.date_posted).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
+                  </p>
 
-                <p className="small text-muted mb-2">
-                  Date Written: {new Date(a.date_written).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                </p>
+                  <p className="small fw-semibold mb-1">{a.author_name}</p>
 
-                <p className="text-muted mb-0">{a.summary}</p>
+                  {a.institution && (
+                    <p className="small text-muted mb-1">{a.institution}</p>
+                  )}
+
+                  <p className="small text-muted mb-2">
+                    Date Written: {new Date(a.date_written).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </p>
+
+                  <p className="text-muted mb-0">{a.summary}</p>
+                </div>
               </div>
             ))}
           </div>
