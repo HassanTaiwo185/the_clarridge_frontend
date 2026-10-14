@@ -332,7 +332,8 @@ function Apply() {
               />
             </div>
 
-            <label className="fw-semibold small mb-1 d-block">Upload Statement of Purpose</label>
+            <label className="fw-semibold small mb-1 d-block">Upload your Answer: Where do you see yourself in five years, 
+                and how do you aim to get there?</label>
             <div
               className="border rounded p-3 d-flex justify-content-between align-items-center"
               style={{ backgroundColor: "#f8f9fb", cursor: "pointer" }}
@@ -375,8 +376,7 @@ function Apply() {
               <dd>{form.level}</dd>
               <dt className="text-muted">CGPA</dt>
               <dd>{form.cgpa}</dd>
-              <dt className="text-muted">Upload your Answer: Where do you see yourself in five years, 
-                and how do you aim to get there?</dt>
+              <dt className="text-muted">Five-Year Goals</dt>
               <dd>{statementOfPurpose?.name}</dd>
               <dt className="text-muted">Passport Photo</dt>
               <dd>{passportPhoto?.name}</dd>

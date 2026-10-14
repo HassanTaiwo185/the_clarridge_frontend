@@ -409,7 +409,7 @@ function ApplicationsManage() {
               </dd>
 
               <dt className="text-muted">
-                Statement of Purpose
+                Applicants — Five-Year Goals
               </dt>
 
               <dd>
