@@ -480,7 +480,8 @@ function ApplicationsManage() {
                 rel="noopener noreferrer"
                 className="btn btn-navy w-100 mb-2"
               >
-                View Statement of Purpose
+                View Applicants — Five-Year Goals
+
               </a>
             )}
 

@@ -375,7 +375,8 @@ function Apply() {
               <dd>{form.level}</dd>
               <dt className="text-muted">CGPA</dt>
               <dd>{form.cgpa}</dd>
-              <dt className="text-muted">Statement of Purpose</dt>
+              <dt className="text-muted">Upload your Answer: Where do you see yourself in five years, 
+                and how do you aim to get there?</dt>
               <dd>{statementOfPurpose?.name}</dd>
               <dt className="text-muted">Passport Photo</dt>
               <dd>{passportPhoto?.name}</dd>
